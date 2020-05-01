@@ -1,0 +1,9 @@
+generator:
+  man:
+    firstNamesFilePath: "classpath*:static/NamesForBankAccounts/MansNames.txt"
+    lastNamesFilePath: "classpath*:static/NamesForBankAccounts/MansSurnames.txt"
+    patronymicsFilePath: "classpath*:static/NamesForBankAccounts/MansPatronymics.txt"
+  woman:
+    firstNamesFilePath: "classpath*:static/NamesForBankAccounts/WomansNames.txt"
+    lastNamesFilePath: "classpath*:static/NamesForBankAccounts/WomansSurnames.txt"
+    patronymicsFilePath: "classpath*:static/NamesForBankAccounts/WomansPatronymics.txt"

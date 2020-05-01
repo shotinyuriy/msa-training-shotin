@@ -1,0 +1,21 @@
+{
+  1
+  "@type": "currentStatus",
+  2
+  "statementText": "CREATE TABLE PAGEVIEWS_REGIONS WITH (KAFKA_TOPIC='PAGEVIEWS_REGIONS', PARTITIONS=1, REPLICAS=1) AS SELECT\n  PAGEVIEWS_FEMALE.GENDER GENDER,\n  PAGEVIEWS_FEMALE.REGIONID REGIONID,\n  COUNT(*) NUMUSERS\nFROM PAGEVIEWS_FEMALE PAGEVIEWS_FEMALE\nWINDOW TUMBLING ( SIZE 30 SECONDS ) \nGROUP BY PAGEVIEWS_FEMALE.GENDER, PAGEVIEWS_FEMALE.REGIONID\nHAVING (COUNT(*) > 1)\nEMIT CHANGES;",
+  3
+  "commandId": "table/`PAGEVIEWS_REGIONS`/create",
+  4
+  "commandStatus": {
+    5
+    "status": "SUCCESS",
+    6
+    "message": "Created query with ID CTAS_PAGEVIEWS_REGIONS_7"
+    7
+  },
+  8
+  "commandSequenceNumber": 8,
+  9
+  "warnings": []
+  10
+}

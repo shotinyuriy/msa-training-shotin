@@ -1,0 +1,22 @@
+
+{
+  1
+  "@type": "currentStatus",
+  2
+  "statementText": "CREATE STREAM PAGEVIEWS_FEMALE_LIKE_89 WITH (KAFKA_TOPIC='pageviews_enriched_r8_r9', PARTITIONS=1, REPLICAS=1, VALUE_FORMAT='AVRO') AS SELECT *\nFROM PAGEVIEWS_FEMALE PAGEVIEWS_FEMALE\nWHERE ((PAGEVIEWS_FEMALE.REGIONID LIKE '%_8') OR (PAGEVIEWS_FEMALE.REGIONID LIKE '%_9'))\nEMIT CHANGES;",
+  3
+  "commandId": "stream/`PAGEVIEWS_FEMALE_LIKE_89`/create",
+  4
+  "commandStatus": {
+    5
+    "status": "SUCCESS",
+    6
+    "message": "Created query with ID CSAS_PAGEVIEWS_FEMALE_LIKE_89_5"
+    7
+  },
+  8
+  "commandSequenceNumber": 6,
+  9
+  "warnings": []
+  10
+}

@@ -1,0 +1,21 @@
+{
+  1
+  "@type": "currentStatus",
+  2
+  "statementText": "CREATE STREAM PAGEVIEWS_FEMALE WITH (KAFKA_TOPIC='PAGEVIEWS_FEMALE', PARTITIONS=1, REPLICAS=1) AS SELECT\n  USERS.USERID USERID,\n  PAGEVIEWS.PAGEID PAGEID,\n  USERS.REGIONID REGIONID,\n  USERS.GENDER GENDER\nFROM PAGEVIEWS PAGEVIEWS\nLEFT OUTER JOIN USERS USERS ON ((PAGEVIEWS.USERID = USERS.USERID))\nWHERE (USERS.GENDER = 'FEMALE')\nEMIT CHANGES;",
+  3
+  "commandId": "stream/`PAGEVIEWS_FEMALE`/create",
+  4
+  "commandStatus": {
+    5
+    "status": "SUCCESS",
+    6
+    "message": "Created query with ID CSAS_PAGEVIEWS_FEMALE_0"
+    7
+  },
+  8
+  "commandSequenceNumber": 4,
+  9
+  "warnings": []
+  10
+}
