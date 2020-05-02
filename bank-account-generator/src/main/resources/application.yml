@@ -1,3 +1,5 @@
+server:
+  port: 9001
 generator:
   man:
     firstNamesFilePath: "classpath*:static/NamesForBankAccounts/MansNames.txt"

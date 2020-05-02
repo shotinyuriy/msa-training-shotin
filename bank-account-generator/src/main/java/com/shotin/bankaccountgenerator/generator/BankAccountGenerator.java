@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class BankAccountGenerator {
@@ -16,6 +17,8 @@ public class BankAccountGenerator {
     private Map<Gender, NamesGenerator> nameGenerators;
 
     private Random random = new Random(System.nanoTime());
+
+    private AtomicLong accountNumberSeed = new AtomicLong(System.currentTimeMillis());
 
     public BankAccountGenerator(@Autowired NamesGenerator manNamesGenerator,
                                 @Autowired NamesGenerator womanNamesGenerator) {
@@ -33,7 +36,7 @@ public class BankAccountGenerator {
         bankAccount.setFirstName(namesGenerator.getRandomFirstName());
         bankAccount.setLastName(namesGenerator.getRandomLastName());
         bankAccount.setPatronymic(namesGenerator.getRandomPatronimic());
-        bankAccount.setAccountNumber(System.currentTimeMillis());
+        bankAccount.setAccountNumber(accountNumberSeed.getAndIncrement());
 
         return bankAccount;
     }
