@@ -1,0 +1,2 @@
+- bank-account-generator: 9001
+- kafka-producer: 9002

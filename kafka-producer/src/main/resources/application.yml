@@ -1,0 +1,18 @@
+server:
+  port: 9002
+bank-account-generator:
+  timeout-millis: 5000
+  baseUrl: "http://localhost:9001"
+  get-random-uri: "/bankAccounts/random"
+  get-random-count-uri: "/bankAccounts/randomCount/{count}"
+bank-account-scheduler:
+  batch-size: 10
+spring:
+  kafka:
+    bootstrap-servers: 192.168.0.103:9092
+    producer:
+      bootstrap-servers: 192.168.0.103:9092
+    consumer:
+      bootstrap-servers: 192.168.0.103:9092
+    streams:
+      bootstrap-servers: 192.168.0.103:9092
