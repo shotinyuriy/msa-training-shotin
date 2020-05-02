@@ -2,6 +2,7 @@ package com.shotin.bankaccountgenerator.rest;
 
 import com.shotin.bankaccountgenerator.generator.BankAccountGenerator;
 import com.shotin.bankaccountgenerator.model.BankAccount;
+import com.shotin.bankaccountgenerator.model.BankAccountList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +42,10 @@ public class BankAccountRestResource {
             bankAccounts.add(bankAccount);
         }
 
-        ResponseEntity<Object> responseEntity = ResponseEntity.ok(bankAccounts);
+        BankAccountList bankAccountList = new BankAccountList();
+        bankAccountList.setBankAccounts(bankAccounts);
+
+        ResponseEntity<Object> responseEntity = ResponseEntity.ok(bankAccountList);
         return responseEntity;
     }
 }
