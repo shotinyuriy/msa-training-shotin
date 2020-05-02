@@ -31,7 +31,7 @@ public class BankAccountRestResource {
         return responseEntity;
     }
 
-    @GetMapping("/randomCount/{count}")
+    @GetMapping("/manyRandom/{count}")
     public ResponseEntity<Object> getRandomBankAccount(@PathVariable int count) {
         if (count < 1) {
             return ResponseEntity.badRequest().body("count should be an integer greater than zero");

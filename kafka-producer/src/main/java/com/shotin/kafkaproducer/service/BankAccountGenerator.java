@@ -10,8 +10,6 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
-import java.time.temporal.TemporalUnit;
-import java.util.List;
 
 @Service
 public class BankAccountGenerator {
@@ -25,7 +23,7 @@ public class BankAccountGenerator {
     @Value("${bank-account-generator.get-random-uri}")
     private String getRandomUri;
 
-    @Value("${bank-account-generator.get-random-count-uri}")
+    @Value("${bank-account-generator.get-many-random-uri}")
     private String getRandomCountUri;
 
     private WebClient webClient;

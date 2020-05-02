@@ -3,6 +3,8 @@ package com.shotin.kafkaproducer.rest;
 import com.shotin.kafkaproducer.kafka.BankAccountPublisher;
 import com.shotin.kafkaproducer.model.BankAccount;
 import com.shotin.kafkaproducer.model.BankAccountList;
+import com.shotin.kafkaproducer.model.BankAccountSchedulerConfig;
+import com.shotin.kafkaproducer.scheduler.BankAccountsScheduler;
 import com.shotin.kafkaproducer.service.BankAccountGenerator;
 import com.shotin.kafkaproducer.service.BankAccountTypeEnricher;
 import org.slf4j.Logger;
@@ -21,13 +23,16 @@ public class KafkaMessageResource {
     private BankAccountPublisher bankAccountPublisher;
     private BankAccountGenerator bankAccountGenerator;
     private BankAccountTypeEnricher bankAccountTypeEnricher;
+    private BankAccountsScheduler bankAccountsScheduler;
 
     public KafkaMessageResource(@Autowired BankAccountPublisher bankAccountPublisher,
                                 @Autowired BankAccountGenerator bankAccountGenerator,
-                                @Autowired BankAccountTypeEnricher bankAccountTypeEnricher) {
+                                @Autowired BankAccountTypeEnricher bankAccountTypeEnricher,
+                                @Autowired BankAccountsScheduler bankAccountsScheduler) {
         this.bankAccountPublisher = bankAccountPublisher;
         this.bankAccountGenerator = bankAccountGenerator;
         this.bankAccountTypeEnricher = bankAccountTypeEnricher;
+        this.bankAccountsScheduler = bankAccountsScheduler;
     }
 
 
@@ -54,7 +59,7 @@ public class KafkaMessageResource {
         });
         return bankAccountFlux;
     }
-    @PostMapping("/bankAccounts/randomCount/{count}")
+    @PostMapping("/bankAccounts/manyRandom/{count}")
     public Flux<BankAccountList> sendRandomBankAccount(@PathVariable int count) {
         Flux<BankAccountList> bankAccountFlux = bankAccountGenerator.getManyRandomAccountsNonBlocking(count);
         bankAccountFlux.subscribe(bankAccountList -> {
@@ -65,6 +70,12 @@ public class KafkaMessageResource {
             LOG.info("Enriched Bank Accounts "+bankAccountList);
         });
         return bankAccountFlux;
+    }
+
+    @PatchMapping("/bankAccountScheduler")
+    public ResponseEntity<Object> updateBankAccountScheduler(@RequestBody BankAccountSchedulerConfig config) {
+        bankAccountsScheduler.applyConfiguration(config);
+        return ResponseEntity.ok().build();
     }
 
 }
