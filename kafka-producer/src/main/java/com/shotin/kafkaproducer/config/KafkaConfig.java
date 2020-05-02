@@ -36,4 +36,6 @@ public class KafkaConfig {
     public KafkaTemplate<String, BankAccount> kafkaTemplate() {
         return new KafkaTemplate<String, BankAccount>(producerFactory());
     }
+
+
 }

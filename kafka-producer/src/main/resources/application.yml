@@ -1,5 +1,8 @@
 server:
   port: 9002
+bank-accounts:
+  kafka:
+    topic: bank-accounts
 bank-account-generator:
   timeout-millis: 5000
   baseUrl: "http://localhost:9001"
@@ -9,15 +12,9 @@ bank-account-scheduler:
   batch-size: 10
 spring:
   profiles:
-    active: macbook
+    active: kafka-on-macbook
 ---
 spring:
-  profiles: macbook
+  profiles: kafka-on-macbook
   kafka:
     bootstrap-servers: 192.168.0.103:9092
-    producer:
-      bootstrap-servers: 192.168.0.103:9092
-    consumer:
-      bootstrap-servers: 192.168.0.103:9092
-    streams:
-      bootstrap-servers: 192.168.0.103:9092
