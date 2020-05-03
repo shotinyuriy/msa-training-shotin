@@ -1,3 +1,9 @@
+buildscript {
+	ext {
+		cassandraUnitVersion = '3.3.0.2'
+	}
+}
+
 plugins {
 	id 'org.springframework.boot' version '2.2.6.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
@@ -8,21 +14,33 @@ group = 'com.shotin'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
+
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'io.dropwizard.metrics:metrics-core:3.2.2'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	testImplementation 'junit:junit:4.12'
+	testCompile 'org.cassandraunit:cassandra-unit:'+cassandraUnitVersion
+	testCompile('org.cassandraunit:cassandra-unit-spring:'+cassandraUnitVersion)
+	testCompile 'org.cassandraunit:cassandra-unit-shaded:'+cassandraUnitVersion
 }
 
 test {
 	useJUnitPlatform()
+}
+
+task printProperties {
+	doLast {
+		println cassandraUnitVersion
+	}
 }

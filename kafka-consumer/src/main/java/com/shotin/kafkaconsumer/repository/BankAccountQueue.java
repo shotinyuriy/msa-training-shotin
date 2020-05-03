@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Repository
-public class BankAccountQueueRepository {
-    private final Logger LOG = LoggerFactory.getLogger(BankAccountQueueRepository.class);
+public class BankAccountQueue {
+    private final Logger LOG = LoggerFactory.getLogger(BankAccountQueue.class);
 
     private ConcurrentLinkedQueue<BankAccount> kafkaBankAccountsQueue = new ConcurrentLinkedQueue<>();
 
@@ -25,5 +25,9 @@ public class BankAccountQueueRepository {
 
     public boolean isEmpty() {
         return kafkaBankAccountsQueue.isEmpty();
+    }
+
+    public int size(){
+        return kafkaBankAccountsQueue.size();
     }
 }

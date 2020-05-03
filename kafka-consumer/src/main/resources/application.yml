@@ -3,6 +3,11 @@ server:
 spring:
   profiles:
     active: kafka-on-macbook
+  data:
+    cassandra:
+      keyspace-name: bankkeyspace
+      schema-action: create_if_not_exists
+      port: 9042
 bank-accounts:
   kafka:
     topic: bank-accounts

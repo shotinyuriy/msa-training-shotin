@@ -1,14 +1,37 @@
 package com.shotin.kafkaconsumer.model;
 
+import com.shotin.kafkaproducer.model.BankAccount;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
+
 import java.util.UUID;
 
+import static com.shotin.kafkaconsumer.model.BankAccountEntity.BANK_ACCOUNT_TABLE;
+
+@Table(BANK_ACCOUNT_TABLE)
 public class BankAccountEntity {
+    public static final String BANK_ACCOUNT_TABLE = "bank_account";
+
+    @PrimaryKey
     private UUID uuid;
+
     private String firstName;
     private String lastName;
     private String patronymic;
     private long accountNumber;
     private AccountType accountType;
+
+    public BankAccountEntity() {
+    }
+
+    public BankAccountEntity(BankAccount bankAccount) {
+        this.uuid = bankAccount.getUuid();
+        this.accountNumber = bankAccount.getAccountNumber();
+        this.firstName = bankAccount.getFirstName();
+        this.lastName = bankAccount.getLastName();
+        this.patronymic = bankAccount.getPatronymic();
+        this.accountType = bankAccount.getAccountType();
+    }
 
     public UUID getUuid() {
         return uuid;
@@ -60,7 +83,7 @@ public class BankAccountEntity {
 
     @Override
     public String toString() {
-        return "KafkaBankAccount{" +
+        return "BankAccountEntity{" +
                 "uuid=" + uuid +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
