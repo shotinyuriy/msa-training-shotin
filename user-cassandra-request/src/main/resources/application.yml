@@ -1,0 +1,6 @@
+server:
+  port: 9004
+spring:
+  data:
+    cassandra:
+      keyspace-name: bankkeyspace

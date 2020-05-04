@@ -1,22 +1,16 @@
 package com.shotin.kafkaconsumer.config;
 
-import com.datastax.driver.core.schemabuilder.Create;
 import com.shotin.kafkaconsumer.model.BankAccountEntity;
 import com.shotin.kafkaconsumer.repository.BankAccountRepository;
-import com.shotin.kafkaproducer.model.BankAccount;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.cassandra.config.AbstractCassandraConfiguration;
 import org.springframework.data.cassandra.config.CassandraClusterFactoryBean;
-import org.springframework.data.cassandra.config.KeyspaceActionSpecificationFactoryBean;
 import org.springframework.data.cassandra.config.SchemaAction;
 import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecification;
-import org.springframework.data.cassandra.core.cql.keyspace.CreateTableSpecification;
 import org.springframework.data.cassandra.core.cql.keyspace.DataCenterReplication;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 
