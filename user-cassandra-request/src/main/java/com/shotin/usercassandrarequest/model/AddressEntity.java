@@ -1,10 +1,10 @@
-package com.shotin.kafkaconsumer.model;
+package com.shotin.usercassandrarequest.model;
 
 import com.datastax.driver.core.DataType;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
-import static com.shotin.kafkaconsumer.model.AddressEntity.ADDRESS_TYPE;
+import static com.shotin.usercassandrarequest.model.AddressEntity.ADDRESS_TYPE;
 
 @UserDefinedType(ADDRESS_TYPE)
 public class AddressEntity {

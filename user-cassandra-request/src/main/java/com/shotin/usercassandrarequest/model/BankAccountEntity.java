@@ -1,15 +1,11 @@
-package com.shotin.kafkaconsumer.model;
+package com.shotin.usercassandrarequest.model;
 
-import com.datastax.driver.core.DataType;
-import com.shotin.kafkaproducer.model.BankAccount;
-import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 import java.util.UUID;
 
-import static com.shotin.kafkaconsumer.model.BankAccountEntity.BANK_ACCOUNT_TYPE;
+import static com.shotin.usercassandrarequest.model.BankAccountEntity.BANK_ACCOUNT_TYPE;
 
 @UserDefinedType(BANK_ACCOUNT_TYPE)
 public class BankAccountEntity {
@@ -28,15 +24,6 @@ public class BankAccountEntity {
     private AccountType accountType;
 
     public BankAccountEntity() {
-    }
-
-    public BankAccountEntity(BankAccount bankAccount) {
-        this.uuid = bankAccount.getUuid();
-        this.accountNumber = bankAccount.getAccountNumber();
-        this.firstName = bankAccount.getFirstName();
-        this.lastName = bankAccount.getLastName();
-        this.patronymic = bankAccount.getPatronymic();
-        this.accountType = bankAccount.getAccountType();
     }
 
     public UUID getUuid() {

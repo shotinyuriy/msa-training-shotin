@@ -1,4 +1,4 @@
-package com.shotin.kafkaconsumer.model;
+package com.shotin.usercassandrarequest.model;
 
 import com.datastax.driver.core.DataType;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
@@ -7,7 +7,7 @@ import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.util.UUID;
 
-import static com.shotin.kafkaconsumer.model.BankAccountInfo.BANK_ACCOUNT_INFO_TABLE;
+import static com.shotin.usercassandrarequest.model.BankAccountInfo.BANK_ACCOUNT_INFO_TABLE;
 
 @Table(BANK_ACCOUNT_INFO_TABLE)
 public class BankAccountInfo {

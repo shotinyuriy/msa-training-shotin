@@ -1,6 +1,6 @@
 package com.shotin.usercassandrarequest.rest;
 
-import com.shotin.usercassandrarequest.model.BankAccountEntity;
+import com.shotin.usercassandrarequest.model.BankAccountInfo;
 import com.shotin.usercassandrarequest.repository.BankAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class BankAccountRestResource {
 
     @GetMapping("/{uuid}")
     public ResponseEntity<Object> getBankAccountByUuid(@PathVariable UUID uuid) {
-        Optional<BankAccountEntity> bankAccount = bankAccountRepository.findById(uuid);
+        Optional<BankAccountInfo> bankAccount = bankAccountRepository.findById(uuid);
         if(!bankAccount.isPresent()) {
             return ResponseEntity.notFound().build();
         }
