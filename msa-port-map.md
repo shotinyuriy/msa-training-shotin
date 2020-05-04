@@ -1,3 +1,5 @@
 - bank-account-generator: 9001
 - kafka-producer: 9002
 - kafka-consumer: 9003
+- user-cassandra-request: 9004
+- address-generator: 9005
