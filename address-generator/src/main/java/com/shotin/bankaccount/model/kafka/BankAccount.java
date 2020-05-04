@@ -1,6 +1,4 @@
-package com.shotin.kafkaproducer.model;
-
-import com.shotin.kafkaconsumer.model.AccountType;
+package com.shotin.bankaccount.model.kafka;
 
 import java.util.UUID;
 
@@ -62,13 +60,13 @@ public class BankAccount {
 
     @Override
     public String toString() {
-        return "KafkaBankAccount{" +
+        return "BankAccount{" +
                 "uuid=" + uuid +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", patronymic='" + patronymic + '\'' +
                 ", accountNumber=" + accountNumber +
-                ", accountType=" + accountType +
+                ", accountType=" + accountType + 
                 '}';
     }
 }

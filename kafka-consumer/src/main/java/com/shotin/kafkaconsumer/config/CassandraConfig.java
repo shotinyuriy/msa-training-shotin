@@ -14,7 +14,13 @@ import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecif
 import org.springframework.data.cassandra.core.cql.keyspace.DataCenterReplication;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableCassandraRepositories(basePackageClasses = {BankAccountRepository.class})
@@ -52,5 +58,26 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
         DataCenterReplication dcr = DataCenterReplication.of("dc1", 3L);
         ckss.ifNotExists(true).createKeyspace(getKeyspaceName()).withNetworkReplication(dcr);
         return ckss;
+    }
+
+    public static List<String> loadStartUpScriptsFromResource(String resourceName) {
+        List<String> scripts = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        try(InputStream inputStream = CassandraConfig.class.getClassLoader().getResourceAsStream(resourceName);
+            InputStreamReader reader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(reader)) {
+
+            bufferedReader.lines()
+                    .forEach(line -> sb.append(line+"\n"));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load cassandra startup script", e);
+        }
+        if (sb.length() > 0) {
+            String[] lines = sb.toString().split("\\|");
+            for (String line : lines) {
+                scripts.add(line);
+            }
+        }
+        return scripts;
     }
 }

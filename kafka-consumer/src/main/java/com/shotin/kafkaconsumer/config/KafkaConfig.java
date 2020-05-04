@@ -1,7 +1,6 @@
 package com.shotin.kafkaconsumer.config;
 
-import com.shotin.kafkaproducer.model.BankAccount;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
+import com.shotin.bankaccount.model.kafka.BankAccount;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -29,7 +28,7 @@ public class KafkaConfig {
 //        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 //        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         JsonDeserializer<BankAccount> jsonDeserializer = new JsonDeserializer<>(BankAccount.class);
-        jsonDeserializer.addTrustedPackages("com.shotin.kafkaproducer.model");
+        jsonDeserializer.addTrustedPackages(BankAccount.class.getPackage().getName());
         return new DefaultKafkaConsumerFactory<String, BankAccount>(config, new StringDeserializer(), jsonDeserializer);
     }
 

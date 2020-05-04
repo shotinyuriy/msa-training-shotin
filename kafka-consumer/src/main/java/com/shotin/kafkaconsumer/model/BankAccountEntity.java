@@ -1,24 +1,27 @@
 package com.shotin.kafkaconsumer.model;
 
-import com.shotin.kafkaproducer.model.BankAccount;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
+import com.shotin.bankaccount.model.kafka.BankAccount;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 import java.util.UUID;
 
-import static com.shotin.kafkaconsumer.model.BankAccountEntity.BANK_ACCOUNT_TABLE;
+import static com.shotin.kafkaconsumer.model.BankAccountEntity.BANK_ACCOUNT_TYPE;
 
-@Table(BANK_ACCOUNT_TABLE)
+@UserDefinedType(BANK_ACCOUNT_TYPE)
 public class BankAccountEntity {
-    public static final String BANK_ACCOUNT_TABLE = "bank_account";
+    public static final String BANK_ACCOUNT_TYPE = "bank_account_type";
 
-    @PrimaryKey
     private UUID uuid;
-
+    @Column("first_name")
     private String firstName;
+    @Column("last_name")
     private String lastName;
+    @Column("patronymic")
     private String patronymic;
+    @Column("account_number")
     private long accountNumber;
+    @Column("account_type")
     private AccountType accountType;
 
     public BankAccountEntity() {

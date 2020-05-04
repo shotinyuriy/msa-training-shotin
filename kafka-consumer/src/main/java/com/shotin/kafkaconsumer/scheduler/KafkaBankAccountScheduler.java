@@ -1,9 +1,11 @@
 package com.shotin.kafkaconsumer.scheduler;
 
+import com.shotin.kafkaconsumer.model.AddressEntity;
 import com.shotin.kafkaconsumer.model.BankAccountEntity;
+import com.shotin.kafkaconsumer.model.BankAccountInfo;
 import com.shotin.kafkaconsumer.repository.BankAccountQueue;
 import com.shotin.kafkaconsumer.repository.BankAccountRepository;
-import com.shotin.kafkaproducer.model.BankAccount;
+import com.shotin.bankaccount.model.kafka.BankAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,8 @@ public class KafkaBankAccountScheduler {
                 break;
             }
             BankAccountEntity bankAccountEntity = new BankAccountEntity(bankAccount);
-            bankAccountRepository.save(bankAccountEntity);
+            BankAccountInfo bankAccountInfo = new BankAccountInfo(bankAccountEntity.getUuid(), bankAccountEntity, new AddressEntity());
+            bankAccountRepository.save(bankAccountInfo);
         }
         LOG.info("Finished to save bank accounts to DB accounts count = "+currentSize);
     }

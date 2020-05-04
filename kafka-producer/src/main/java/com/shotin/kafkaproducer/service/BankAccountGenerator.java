@@ -1,7 +1,7 @@
 package com.shotin.kafkaproducer.service;
 
-import com.shotin.kafkaproducer.model.BankAccount;
-import com.shotin.kafkaproducer.model.BankAccountList;
+import com.shotin.bankaccount.model.kafka.BankAccount;
+import com.shotin.bankaccount.model.kafka.BankAccountList;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;

@@ -2,8 +2,8 @@ package com.shotin.kafkaproducer.scheduler;
 
 
 import com.shotin.kafkaproducer.kafka.BankAccountPublisher;
-import com.shotin.kafkaproducer.model.BankAccount;
-import com.shotin.kafkaproducer.model.BankAccountList;
+import com.shotin.bankaccount.model.kafka.BankAccount;
+import com.shotin.bankaccount.model.kafka.BankAccountList;
 import com.shotin.kafkaproducer.model.BankAccountSchedulerConfig;
 import com.shotin.kafkaproducer.service.BankAccountGenerator;
 import com.shotin.kafkaproducer.service.BankAccountTypeEnricher;

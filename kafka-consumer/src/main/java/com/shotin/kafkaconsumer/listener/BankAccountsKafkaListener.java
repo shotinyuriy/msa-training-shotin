@@ -1,7 +1,7 @@
 package com.shotin.kafkaconsumer.listener;
 
 import com.shotin.kafkaconsumer.repository.BankAccountQueue;
-import com.shotin.kafkaproducer.model.BankAccount;
+import com.shotin.bankaccount.model.kafka.BankAccount;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

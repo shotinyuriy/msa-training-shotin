@@ -1,4 +1,4 @@
-package com.shotin.kafkaproducer.model;
+package com.shotin.bankaccount.model.kafka;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.shotin.kafkaconsumer.repository;
 
-import com.shotin.kafkaproducer.model.BankAccount;
+import com.shotin.bankaccount.model.kafka.BankAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

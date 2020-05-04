@@ -1,6 +1,6 @@
 package com.shotin.kafkaconsumer.repository;
 
-import com.shotin.kafkaproducer.model.BankAccount;
+import com.shotin.bankaccount.model.kafka.BankAccount;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

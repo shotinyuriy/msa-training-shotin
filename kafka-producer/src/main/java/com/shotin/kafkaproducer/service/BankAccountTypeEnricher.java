@@ -1,7 +1,7 @@
 package com.shotin.kafkaproducer.service;
 
-import com.shotin.kafkaproducer.model.AccountType;
-import com.shotin.kafkaproducer.model.BankAccount;
+import com.shotin.bankaccount.model.kafka.AccountType;
+import com.shotin.bankaccount.model.kafka.BankAccount;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,18 +1,18 @@
 package com.shotin.kafkaconsumer.repository;
 
 import com.datastax.driver.core.Cluster;
-import com.shotin.kafkaconsumer.config.CassandraConfig;
 import com.shotin.kafkaconsumer.config.TestCassandraConfig;
 import com.shotin.kafkaconsumer.model.AccountType;
+import com.shotin.kafkaconsumer.model.AddressEntity;
 import com.shotin.kafkaconsumer.model.BankAccountEntity;
+import com.shotin.kafkaconsumer.model.BankAccountInfo;
 import org.apache.thrift.transport.TTransportException;
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.cassandra.core.CassandraAdminTemplate;
-import org.springframework.data.cassandra.core.CassandraOperations;
+import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.core.cql.CqlIdentifier;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,11 +23,9 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.shotin.kafkaconsumer.model.BankAccountEntity.BANK_ACCOUNT_TABLE;
-
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@PropertySource("classpath*:application.yml")
+//@PropertySource("classpath*:application.yml")
 @ContextConfiguration(classes = {TestCassandraConfig.class})
 public class BankAccountRepositoryTest {
 
@@ -36,6 +34,9 @@ public class BankAccountRepositoryTest {
 
     @Autowired
     protected CassandraAdminTemplate cassandraAdminTemplate;
+
+    @Autowired
+    protected CassandraTemplate cassandraTemplate;
 
     @BeforeClass
     public static void startCassandra() throws InterruptedException, IOException, TTransportException {
@@ -52,13 +53,13 @@ public class BankAccountRepositoryTest {
 
     @Before
     public void createTable() {
-        cassandraAdminTemplate.createTable(true, CqlIdentifier.of(BANK_ACCOUNT_TABLE),
-                BankAccountEntity.class, new HashMap<>());
+        cassandraAdminTemplate.createTable(true, CqlIdentifier.of(BankAccountInfo.BANK_ACCOUNT_INFO_TABLE),
+                BankAccountInfo.class, new HashMap<>());
     }
 
     @After
     public void dropTable() {
-        cassandraAdminTemplate.dropTable(BankAccountEntity.class);
+        cassandraAdminTemplate.dropTable(BankAccountInfo.class);
     }
 
     @Test
@@ -72,16 +73,21 @@ public class BankAccountRepositoryTest {
         bankAccount.setAccountNumber(33L);
         bankAccount.setAccountType(AccountType.CHECKING);
 
-        bankAccountRepository.save(bankAccount);
+        AddressEntity address = new AddressEntity();
+        address.setStreet("ул. Московская 1");
+        address.setCity("Саратов");
+        address.setState("Саратовская область");
 
-        Optional<BankAccountEntity> foundBankAccount = bankAccountRepository.findById(bankAccountId);
-        Assert.assertTrue(foundBankAccount.isPresent());
+        BankAccountInfo bankAccountInfo = new BankAccountInfo(bankAccountId, bankAccount, address);
 
-        bankAccountRepository.delete(bankAccount);
+        bankAccountRepository.save(bankAccountInfo);
 
-        foundBankAccount = bankAccountRepository.findById(bankAccountId);
-        Assert.assertFalse(foundBankAccount.isPresent());
+        Optional<BankAccountInfo> foundBankAccountInfo = bankAccountRepository.findById(bankAccountId);
+        Assert.assertTrue(foundBankAccountInfo.isPresent());
+
+        bankAccountRepository.delete(bankAccountInfo);
+
+        foundBankAccountInfo = bankAccountRepository.findById(bankAccountId);
+        Assert.assertFalse(foundBankAccountInfo.isPresent());
     }
-
-
 }

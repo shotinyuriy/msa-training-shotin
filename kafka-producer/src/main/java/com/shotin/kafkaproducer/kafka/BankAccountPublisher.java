@@ -1,6 +1,6 @@
 package com.shotin.kafkaproducer.kafka;
 
-import com.shotin.kafkaproducer.model.BankAccount;
+import com.shotin.bankaccount.model.kafka.BankAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class BankAccountPublisher {
 
     public void sendBankAccount(BankAccount bankAccount) {
 
-        ListenableFuture<SendResult<String, BankAccount>> future = kafkaTemplate.send(topic, bankAccount);
+        ListenableFuture<SendResult<String, BankAccount>> future = kafkaTemplate.send(topic, bankAccount.getUuid().toString(), bankAccount);
         future.addCallback(new ListenableFutureCallback<SendResult<String, BankAccount>>() {
 
             @Override
