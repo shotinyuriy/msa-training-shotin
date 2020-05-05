@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class KafkaBankAccountScheduler {
 
     private final Logger LOG = LoggerFactory.getLogger(KafkaBankAccountScheduler.class);
@@ -26,7 +26,7 @@ public class KafkaBankAccountScheduler {
         this.bankAccountRepository = bankAccountRepository;
     }
 
-    @Scheduled(initialDelay = 1000L, fixedDelay = 10000L)
+//    @Scheduled(initialDelay = 1000L, fixedDelay = 10000L)
     public void saveBankAccountsToDatabase() {
         int currentSize = bankAccountQueue.size();
         LOG.info("Staring to save bank accounts to DB accounts count = "+currentSize);

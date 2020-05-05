@@ -16,6 +16,9 @@ import org.springframework.messaging.handler.annotation.SendTo;
 
 import java.util.UUID;
 
+import static com.shotin.addressgenerator.stream.BankAccountTableProcessor.ADDRESSES_OUTPUT;
+import static com.shotin.addressgenerator.stream.BankAccountTableProcessor.BANK_ACCOUNTS_INPUT;
+
 @EnableBinding(BankAccountTableProcessor.class)
 public class BankAccountToAddressStream {
     private final Logger LOG = LoggerFactory.getLogger(BankAccountToAddressStream.class);
@@ -27,16 +30,15 @@ public class BankAccountToAddressStream {
     }
 
     @StreamListener
-    @SendTo("addresses-output")
+    @SendTo(ADDRESSES_OUTPUT)
     public KStream<String, Address> generateAddressFromBankAccount(
-            @Input("bank-accounts-input") KTable<String, BankAccount> bankAccountTable) {
+            @Input(BANK_ACCOUNTS_INPUT) KTable<String, BankAccount> bankAccountTable) {
         return bankAccountTable
                 .mapValues((key, bankAccount) -> {
-                    LOG.info("received bank account key="+key);
+                    LOG.info("received bank account key=" + key);
                     return bankAccount;
                 })
-//                .filter((key, bankAccount) -> bankAccount.getLastName().length() > 3)
-                 .filter((key, bankAccount) -> bankAccount.getLastName().startsWith("А"))
+                .filter((key, bankAccount) -> bankAccount.getLastName().startsWith("А"))
                 .mapValues((key, bankAccount) -> bankAccountToAddressTransformer.transform(key, bankAccount))
                 .toStream();
 

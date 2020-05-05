@@ -23,18 +23,18 @@ public class KafkaConfig {
     private KafkaProperties kafkaProperties;
 
     @Bean
-    public ConsumerFactory<String, BankAccount> consumerFactory() {
+    public ConsumerFactory consumerFactory() {
         Map<String, Object> config = new HashMap<>(kafkaProperties.buildConsumerProperties());
 //        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 //        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         JsonDeserializer<BankAccount> jsonDeserializer = new JsonDeserializer<>(BankAccount.class);
         jsonDeserializer.addTrustedPackages(BankAccount.class.getPackage().getName());
-        return new DefaultKafkaConsumerFactory<String, BankAccount>(config, new StringDeserializer(), jsonDeserializer);
+        return new DefaultKafkaConsumerFactory(config, new StringDeserializer(), jsonDeserializer);
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, BankAccount> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, BankAccount> listenerContainerFactory =
+    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Object> listenerContainerFactory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         listenerContainerFactory.setConsumerFactory(consumerFactory());
         return listenerContainerFactory;

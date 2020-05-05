@@ -8,9 +8,13 @@ import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.annotation.Output;
 
 public interface BankAccountTableProcessor {
-    @Input("bank-accounts-input")
+
+    String BANK_ACCOUNTS_INPUT = "bank-accounts-input";
+    String ADDRESSES_OUTPUT = "addresses-output";
+
+    @Input(BANK_ACCOUNTS_INPUT)
     KTable<String, BankAccount> inputTable();
 
-    @Output("addresses-output")
+    @Output(ADDRESSES_OUTPUT)
     KStream<String, Address> outputTable();
 }

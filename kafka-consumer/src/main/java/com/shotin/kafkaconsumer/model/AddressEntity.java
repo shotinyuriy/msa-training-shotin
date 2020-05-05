@@ -1,6 +1,7 @@
 package com.shotin.kafkaconsumer.model;
 
 import com.datastax.driver.core.DataType;
+import com.shotin.bankaccount.model.kafka.Address;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
@@ -19,6 +20,16 @@ public class AddressEntity {
 
     @CassandraType(type = DataType.Name.TEXT)
     private String state;
+
+    public AddressEntity() {
+
+    }
+
+    public AddressEntity(Address address) {
+        this.street = address.getStreet();
+        this.city = address.getCity();
+        this.state = address.getState();
+    }
 
     public String getStreet() {
         return street;

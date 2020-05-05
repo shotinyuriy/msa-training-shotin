@@ -33,7 +33,7 @@ public class BankAccountInfo {
         return uuid;
     }
 
-    public BankAccountEntity getBankAccountEntity() {
+    public BankAccountEntity getBankAccount() {
         return bank_account;
     }
 
