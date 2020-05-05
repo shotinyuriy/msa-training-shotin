@@ -2,7 +2,7 @@ package com.shotin.kafkaproducer.config;
 
 import com.shotin.bankaccount.model.kafka.BankAccount;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.StringSerializer;
+import org.apache.kafka.common.serialization.UUIDSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +14,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Configuration
 public class KafkaConfig {
@@ -22,17 +23,17 @@ public class KafkaConfig {
     private KafkaProperties kafkaProperties;
 
     @Bean
-    public ProducerFactory<String, BankAccount> producerFactory() {
+    public ProducerFactory<UUID, BankAccount> producerFactory() {
         Map<String, Object> config = new HashMap<>(kafkaProperties.buildProducerProperties());
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.0.103:9092");
-        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, UUIDSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return new DefaultKafkaProducerFactory<>(config);
     }
 
     @Bean
-    public KafkaTemplate<String, BankAccount> kafkaTemplate() {
-        return new KafkaTemplate<String, BankAccount>(producerFactory());
+    public KafkaTemplate<UUID, BankAccount> kafkaTemplate() {
+        return new KafkaTemplate<UUID, BankAccount>(producerFactory());
     }
 
 

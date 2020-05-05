@@ -7,14 +7,16 @@ import org.apache.kafka.streams.kstream.KTable;
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.annotation.Output;
 
+import java.util.UUID;
+
 public interface BankAccountTableProcessor {
 
     String BANK_ACCOUNTS_INPUT = "bank-accounts-input";
     String ADDRESSES_OUTPUT = "addresses-output";
 
     @Input(BANK_ACCOUNTS_INPUT)
-    KTable<String, BankAccount> inputTable();
+    KTable<UUID, BankAccount> inputTable();
 
     @Output(ADDRESSES_OUTPUT)
-    KStream<String, Address> outputTable();
+    KStream<UUID, Address> outputTable();
 }

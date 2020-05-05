@@ -3,6 +3,7 @@ package com.shotin.kafkaconsumer.listener;
 import com.shotin.bankaccount.model.kafka.Address;
 import com.shotin.bankaccount.model.kafka.BankAccount;
 import com.shotin.bankaccount.model.kafka.JoinedBankAccountInfo;
+import com.shotin.kafkaconsumer.converter.BankAccountInfoConverter;
 import com.shotin.kafkaconsumer.model.AddressEntity;
 import com.shotin.kafkaconsumer.model.BankAccountEntity;
 import com.shotin.kafkaconsumer.model.BankAccountInfo;
@@ -15,47 +16,49 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.handler.annotation.SendTo;
 
-import static com.shotin.kafkaconsumer.listener.BankAccountAndAddressesProcessor.*;
+import java.util.UUID;
 
-@EnableBinding(BankAccountAndAddressesProcessor.class)
-public class BankAccountInfoStream {
+import static com.shotin.kafkaconsumer.listener.BankAccountAndAddressesProcessor2Steps.*;
 
-    private final Logger LOG = LoggerFactory.getLogger(BankAccountInfoStream.class);
+@Profile("2-steps")
+@EnableBinding(BankAccountAndAddressesProcessor2Steps.class)
+public class BankAccountInfoStream2Steps {
+
+    private final Logger LOG = LoggerFactory.getLogger(BankAccountInfoStream2Steps.class);
 
     private BankAccountRepository bankAccountRepository;
+    private BankAccountInfoConverter bankAccountInfoConverter;
 
-    public BankAccountInfoStream(@Autowired BankAccountRepository bankAccountRepository) {
+    public BankAccountInfoStream2Steps(@Autowired BankAccountRepository bankAccountRepository,
+                                      @Autowired BankAccountInfoConverter bankAccountInfoConverter) {
         this.bankAccountRepository = bankAccountRepository;
+        this.bankAccountInfoConverter = bankAccountInfoConverter;
     }
 
     @StreamListener
     @SendTo(BANK_ACCOUNT_INFOS_OUTPUT)
-    public KStream<String, JoinedBankAccountInfo> produceBankAccountInfo(
-            @Input(BANK_ACCOUNTS_INPUT) KTable<String, BankAccount> bankAccountsTable,
-            @Input(ADDRESSES_INPUT) KTable<String, Address> addressesTable) {
+    public KStream<UUID, JoinedBankAccountInfo> produceBankAccountInfo(
+            @Input(BANK_ACCOUNTS_INPUT) KTable<UUID, BankAccount> bankAccountsTable,
+            @Input(ADDRESSES_INPUT) KTable<UUID, Address> addressesTable) {
 
         return bankAccountsTable.leftJoin(addressesTable, (bankAccount, address) ->
                     new JoinedBankAccountInfo(bankAccount.getUuid(), bankAccount, address)
                 )
-                .filter((key, joinedBankAccountInfo) -> joinedBankAccountInfo != null)
                 .toStream();
     }
 
     @StreamListener
     public void saveToCassandra(
-            @Input(BANK_ACCOUNT_INFOS_INPUT) KTable<String, JoinedBankAccountInfo> joinedBankAccountInfoTable) {
+            @Input(BANK_ACCOUNT_INFOS_INPUT) KTable<UUID, JoinedBankAccountInfo> joinedBankAccountInfoTable) {
 
         joinedBankAccountInfoTable.toStream()
                 .foreach((key, joinedBankAccountInfo) -> {
-                    LOG.info("Processing joinedBankAccount info in KTable.foreach key="+key);
-                    BankAccountEntity bankAccountEntity = new BankAccountEntity(joinedBankAccountInfo.getBankAccount());
-                    AddressEntity addressEntity = null;
-                    if (joinedBankAccountInfo.getAddress() != null) {
-                        addressEntity = new AddressEntity(joinedBankAccountInfo.getAddress());
-                    }
-                    BankAccountInfo bankAccountInfo = new BankAccountInfo(bankAccountEntity.getUuid(), bankAccountEntity, addressEntity);
+                    LOG.info("Processing joinedBankAccount info in KTable.foreach key="+key+
+                            " HAS address="+String.valueOf(joinedBankAccountInfo.getAddress() != null).toUpperCase());
+                    BankAccountInfo bankAccountInfo = bankAccountInfoConverter.from(joinedBankAccountInfo);
                     bankAccountRepository.save(bankAccountInfo);
                 });
     }

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 //@Component
 public class BankAccountsKafkaListener {
 
@@ -21,7 +23,7 @@ public class BankAccountsKafkaListener {
     }
 
 //    @KafkaListener(topics="${bank-accounts.kafka.topic}")
-    public void receiveBankAccounts(ConsumerRecord<String, BankAccount> bankAccountRecord) {
+    public void receiveBankAccounts(ConsumerRecord<UUID, BankAccount> bankAccountRecord) {
         LOG.info("Received bank account record. key="+bankAccountRecord.key()+" value.id="+bankAccountRecord.value().getUuid());
         bankAccountQueue.push(bankAccountRecord.value());
     }

@@ -31,8 +31,8 @@ public class BankAccountToAddressStream {
 
     @StreamListener
     @SendTo(ADDRESSES_OUTPUT)
-    public KStream<String, Address> generateAddressFromBankAccount(
-            @Input(BANK_ACCOUNTS_INPUT) KTable<String, BankAccount> bankAccountTable) {
+    public KStream<UUID, Address> generateAddressFromBankAccount(
+            @Input(BANK_ACCOUNTS_INPUT) KTable<UUID, BankAccount> bankAccountTable) {
         return bankAccountTable
                 .mapValues((key, bankAccount) -> {
                     LOG.info("received bank account key=" + key);

@@ -23,14 +23,14 @@ public class LocalBankAccountToAddressTransformer implements BankAccountToAddres
     }
 
     @Override
-    public Address transform(String key, BankAccount bankAccount) {
+    public Address transform(UUID key, BankAccount bankAccount) {
         LOG.info("Transforming key="+key);
         Address address = new Address();
         int streetIdx = randomProvider.nextInt(AddressParts.STREETS.length);
         int cityIdx = randomProvider.nextInt(AddressParts.CITIES.length);
         int stateIdx = randomProvider.nextInt(AddressParts.STATES.length);
 
-        address.setUuid(UUID.fromString(key));
+        address.setUuid(key);
         address.setStreet(AddressParts.STREETS[streetIdx]);
         address.setCity(AddressParts.CITIES[cityIdx]);
         address.setState(AddressParts.STATES[stateIdx]);

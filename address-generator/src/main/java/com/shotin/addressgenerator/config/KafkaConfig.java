@@ -6,6 +6,8 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.apache.kafka.common.serialization.UUIDDeserializer;
+import org.apache.kafka.common.serialization.UUIDSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +20,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @EnableKafka
 @Configuration
@@ -29,7 +32,7 @@ public class KafkaConfig {
     @Bean
     public ProducerFactory producerFactory() {
         Map<String, Object> config = new HashMap<>(kafkaProperties.buildProducerProperties());
-        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, UUIDSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return new DefaultKafkaProducerFactory(config);
     }
@@ -42,14 +45,14 @@ public class KafkaConfig {
     @Bean
     public ConsumerFactory consumerFactory() {
         Map<String,Object> config = new HashMap<>(kafkaProperties.buildConsumerProperties());
-        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, UUIDDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         return new DefaultKafkaConsumerFactory(config);
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, BankAccount> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, BankAccount> listenerContainerFactory =
+    public ConcurrentKafkaListenerContainerFactory<UUID, BankAccount> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<UUID, BankAccount> listenerContainerFactory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         listenerContainerFactory.setConsumerFactory(consumerFactory());
         return listenerContainerFactory;

@@ -11,28 +11,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import java.util.UUID;
+
 @Service
 public class BankAccountPublisher {
 
     private final Logger LOG = LoggerFactory.getLogger(BankAccountPublisher.class);
 
     @Autowired
-    private KafkaTemplate<String, BankAccount> kafkaTemplate;
+    private KafkaTemplate<UUID, BankAccount> kafkaTemplate;
 
     @Value("${bank-accounts.kafka.topic}")
     private String topic;
 
-    public BankAccountPublisher(@Autowired KafkaTemplate<String, BankAccount> kafkaTemplate) {
+    public BankAccountPublisher(@Autowired KafkaTemplate<UUID, BankAccount> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
     public void sendBankAccount(BankAccount bankAccount) {
 
-        ListenableFuture<SendResult<String, BankAccount>> future = kafkaTemplate.send(topic, bankAccount.getUuid().toString(), bankAccount);
-        future.addCallback(new ListenableFutureCallback<SendResult<String, BankAccount>>() {
+        ListenableFuture<SendResult<UUID, BankAccount>> future = kafkaTemplate.send(topic, bankAccount.getUuid(), bankAccount);
+        future.addCallback(new ListenableFutureCallback<SendResult<UUID, BankAccount>>() {
 
             @Override
-            public void onSuccess(SendResult<String, BankAccount> result) {
+            public void onSuccess(SendResult<UUID, BankAccount> result) {
                 LOG.info("Successfully pushed message to Kafka topic="+topic);
             }
 

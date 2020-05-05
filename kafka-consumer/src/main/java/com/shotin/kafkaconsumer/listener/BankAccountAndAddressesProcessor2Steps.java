@@ -12,14 +12,23 @@ import org.springframework.context.annotation.Profile;
 
 import java.util.UUID;
 
-@Profile("1-step")
-public interface BankAccountAndAddressesProcessor {
+@Profile("2-steps")
+public interface BankAccountAndAddressesProcessor2Steps {
+
     String BANK_ACCOUNTS_INPUT = "bank-accounts-input";
     String ADDRESSES_INPUT = "addresses-input";
+    String BANK_ACCOUNT_INFOS_OUTPUT = "bank-account-infos-output";
+    String BANK_ACCOUNT_INFOS_INPUT = "bank-account-infos-input";
 
     @Input(BANK_ACCOUNTS_INPUT)
     KTable<UUID, BankAccount> bankAccountInput();
 
     @Input(ADDRESSES_INPUT)
     KTable<UUID, Address> addressesInput();
+
+    @Output(BANK_ACCOUNT_INFOS_OUTPUT)
+    KStream<UUID, JoinedBankAccountInfo> bankAccountInfosOutput();
+
+    @Input(BANK_ACCOUNT_INFOS_INPUT)
+    KTable<UUID, JoinedBankAccountInfo> bankAccountInfosInput();
 }
