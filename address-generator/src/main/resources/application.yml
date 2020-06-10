@@ -2,7 +2,7 @@ server:
   port: 9005
 spring:
   profiles:
-    active: local-random, kafka-on-macbook
+    active: local-random
   cloud:
     stream:
       bindings:
