@@ -33,7 +33,7 @@ public class FromFileNamesGeneratorTest {
 
     @Test
     public void testGetRandomPatronimic() {
-        String patronymic = fromFileNamesGenerator.getRandomPatronimic();
+        String patronymic = fromFileNamesGenerator.getRandomPatronymic();
         Assert.assertNotNull(patronymic);
         Assert.assertEquals("Один", patronymic);
     }

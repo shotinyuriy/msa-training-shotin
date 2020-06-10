@@ -6,5 +6,5 @@ public interface NamesGenerator {
 
     String getRandomFirstName();
     String getRandomLastName();
-    String getRandomPatronimic();
+    String getRandomPatronymic();
 }

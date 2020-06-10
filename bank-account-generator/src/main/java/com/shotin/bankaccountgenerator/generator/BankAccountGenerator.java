@@ -35,7 +35,7 @@ public class BankAccountGenerator {
         bankAccount.setUuid(UUID.randomUUID());
         bankAccount.setFirstName(namesGenerator.getRandomFirstName());
         bankAccount.setLastName(namesGenerator.getRandomLastName());
-        bankAccount.setPatronymic(namesGenerator.getRandomPatronimic());
+        bankAccount.setPatronymic(namesGenerator.getRandomPatronymic());
         bankAccount.setAccountNumber(accountNumberSeed.getAndIncrement());
 
         return bankAccount;

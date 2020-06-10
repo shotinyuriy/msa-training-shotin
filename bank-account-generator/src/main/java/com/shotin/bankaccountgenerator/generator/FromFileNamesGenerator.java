@@ -108,7 +108,7 @@ public class FromFileNamesGenerator implements NamesGenerator {
     }
 
     @Override
-    public String getRandomPatronimic() {
+    public String getRandomPatronymic() {
         int index = random.nextInt(patronimics.size());
         return patronimics.get(index);
     }

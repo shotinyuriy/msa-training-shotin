@@ -15,12 +15,12 @@ public class BankAccountGeneratorTest {
         NamesGenerator manNamesGenerator = Mockito.mock(NamesGenerator.class);
         Mockito.when(manNamesGenerator.getRandomFirstName()).thenReturn("FirstName");
         Mockito.when(manNamesGenerator.getRandomLastName()).thenReturn("LastName");
-        Mockito.when(manNamesGenerator.getRandomPatronimic()).thenReturn("Patronimic");
+        Mockito.when(manNamesGenerator.getRandomPatronymic()).thenReturn("Patronimic");
 
         NamesGenerator womanNamesGenerator = Mockito.mock(NamesGenerator.class);
         Mockito.when(womanNamesGenerator.getRandomFirstName()).thenReturn("FirstName");
         Mockito.when(womanNamesGenerator.getRandomLastName()).thenReturn("LastName");
-        Mockito.when(womanNamesGenerator.getRandomPatronimic()).thenReturn("Patronimic");
+        Mockito.when(womanNamesGenerator.getRandomPatronymic()).thenReturn("Patronimic");
 
         bankAccountGenerator = new BankAccountGenerator(manNamesGenerator, womanNamesGenerator);
     }
