@@ -8,6 +8,7 @@ plugins {
 	id 'org.springframework.boot' version '2.2.6.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
+	id 'idea'
 }
 
 group = 'com.shotin'
@@ -38,9 +39,9 @@ dependencies {
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	testImplementation 'junit:junit:4.12'
 	testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
-	testCompile 'org.cassandraunit:cassandra-unit:'+cassandraUnitVersion
-	testCompile('org.cassandraunit:cassandra-unit-spring:'+cassandraUnitVersion)
-	testCompile 'org.cassandraunit:cassandra-unit-shaded:'+cassandraUnitVersion
+	testCompile "org.cassandraunit:cassandra-unit:${cassandraUnitVersion}"
+	testCompile "org.cassandraunit:cassandra-unit-spring:${cassandraUnitVersion}"
+	testCompile "org.cassandraunit:cassandra-unit-shaded:${cassandraUnitVersion}"
 }
 
 dependencyManagement {

@@ -1,7 +1,7 @@
 package com.shotin.kafkaproducer;
 
 import com.shotin.kafkaproducer.kafka.BankAccountPublisher;
-import com.shotin.kafkaproducer.rest.KafkaMessageResource;
+import com.shotin.kafkaproducer.rest.KafkaPublisherResource;
 import com.shotin.kafkaproducer.service.BankAccountGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ class KafkaProducerApplicationTests {
 	void contextLoads() {
 		BankAccountPublisher bankAccountPublisher = applicationContext.getBean(BankAccountPublisher.class);
 		BankAccountGenerator bankAccountGenerator = applicationContext.getBean(BankAccountGenerator.class);
-		KafkaMessageResource kafkaMessageResource = applicationContext.getBean(KafkaMessageResource.class);
+		KafkaPublisherResource kafkaMessageResource = applicationContext.getBean(KafkaPublisherResource.class);
 	}
 
 }

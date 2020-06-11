@@ -32,3 +32,11 @@ docker-compose build --no-cache connect
 
 # Grep Docker Logs
 docker-compose logs connect | grep -i Datagen
+
+# docker exec -i -t 6ee6223a3ce3 bash root@6ee6223a3ce3:/#
+docker exec -i -t f8d43549a52c bash root@f8d43549a52c:/#
+
+
+winpty docker exec -i -t f8d43549a52c bash root@f8d43549a52c:/#
+
+winpty docker exec -i -t f8d43549a52c bash root@f8d43549a52c
