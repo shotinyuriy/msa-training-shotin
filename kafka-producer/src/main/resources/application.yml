@@ -12,9 +12,14 @@ bank-account-scheduler:
   batch-size: 10
 spring:
   profiles:
-    active: kafka-on-macbook
+    active: kafka-on-local
 ---
 spring:
-  profiles: kafka-on-macbook
+  profiles: kafka-on-local
   kafka:
-    bootstrap-servers: 192.168.0.103:9092
+    bootstrap-servers: localhost:9092
+#---
+#spring:
+#  profiles: kafka-on-macbook
+#  kafka:
+#    bootstrap-servers: 192.168.0.103:9092

@@ -25,7 +25,7 @@ public class KafkaConfig {
     @Bean
     public ProducerFactory<UUID, BankAccount> producerFactory() {
         Map<String, Object> config = new HashMap<>(kafkaProperties.buildProducerProperties());
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.0.103:9092");
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, UUIDSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return new DefaultKafkaProducerFactory<>(config);
@@ -35,6 +35,4 @@ public class KafkaConfig {
     public KafkaTemplate<UUID, BankAccount> kafkaTemplate() {
         return new KafkaTemplate<UUID, BankAccount>(producerFactory());
     }
-
-
 }

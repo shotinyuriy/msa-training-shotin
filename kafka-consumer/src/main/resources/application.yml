@@ -2,7 +2,7 @@ server:
   port: 9003
 spring:
   profiles:
-    active: kafka-local, 1-step
+    active: kafka-on-local, 1-step
   data:
     cassandra:
       keyspace-name: bankkeyspace
@@ -25,15 +25,15 @@ bank-accounts:
     topic: bank-accounts
 ---
 spring:
-  profiles: kafka-local
+  profiles: kafka-on-local
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
       group-id: bank-accounts-group
----
-spring:
-  profiles: kafka-on-macbook
-  kafka:
-    bootstrap-servers: 192.168.0.103:9092
-    consumer:
-      group-id: bank-accounts-group
+#---
+#spring:
+#  profiles: kafka-on-macbook
+#  kafka:
+#    bootstrap-servers: 192.168.0.103:9092
+#    consumer:
+#      group-id: bank-accounts-group

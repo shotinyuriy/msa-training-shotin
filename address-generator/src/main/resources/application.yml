@@ -2,7 +2,7 @@ server:
   port: 9005
 spring:
   profiles:
-    active: local-random
+    active: local-random, kafka-on-local
   cloud:
     stream:
       bindings:
@@ -15,6 +15,11 @@ random-api:
   random-numeric-uri: /api/gad5rvpe?key=RUV5-EEJO-CLK9-Z6G1&max={max}
 ---
 spring:
-  profiles: kafka-on-macbook
+  profiles: kafka-on-local
   kafka:
-    bootstrap-servers: 192.168.0.103:9092
+    bootstrap-servers: localhost:9092
+#---
+#spring:
+#  profiles: kafka-on-macbook
+#  kafka:
+#    bootstrap-servers: 192.168.0.103:9092
