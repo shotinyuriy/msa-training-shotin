@@ -1,0 +1,79 @@
+import org.gradle.api.Task
+import org.gradle.api.tasks.TaskState
+
+println 'Build: This is executed during the configuration phase'
+
+project.ext.hasTests = true
+
+task configured {
+    println 'Configured: This is also executed during the configuration phase'
+}
+
+task testPrint {
+    doLast {
+        println 'Task Test: This is executed during the execution phase'
+    }
+}
+
+task testBoth {
+    doFirst {
+        println 'Test Both: This is executed first during the execution phase'
+    }
+    doLast {
+        println 'Test Both: this is executed last during the execution phase'
+    }
+    println 'Test Both: This is executed during the configuration phase'
+}
+
+allprojects {
+    afterEvaluate { project ->
+        if (project.hasTests) {
+            println "After Evaluate: Adding the test task to $project"
+            project.task("test") {
+                doLast {
+                    println "After Evaluate: Running tests for $project"
+                }
+            }
+        }
+
+    }
+}
+
+gradle.afterProject { project ->
+    if (project.state.failure) {
+        println "Evaluation of $project FAILED"
+    } else {
+        println "Evaluation of $project SUCCEEDED"
+    }
+}
+
+tasks.whenTaskAdded { task ->
+    task.ext.srcDir = 'src/main/java'
+}
+
+task a
+
+println "Tasks:$a: source directory is $a.srcDir"
+
+task ok
+
+task broken(dependsOn: 'ok') {
+    doLast {
+        throw new RuntimeException('BROKEN EXCEPTION')
+    }
+}
+
+gradle.taskGraph.beforeTask { Task task ->
+    println "Executing: $task"
+}
+
+gradle.taskGraph.afterTask { Task task, TaskState state ->
+    if (state.failure) {
+        println "$task FAILED"
+    } else {
+        println "$task DONE"
+    }
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'

@@ -1,2 +1,4 @@
 .idea/**/*
 cp-all-in-one/**/*
+
+**/.gradle/**/*

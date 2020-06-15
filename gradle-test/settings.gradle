@@ -1,0 +1,6 @@
+rootProject.name = 'gradle-test'
+
+println 'Settings: This is executed during the initialization phase'
+include 'projectA'
+include 'projectB'
+
