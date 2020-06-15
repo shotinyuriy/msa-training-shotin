@@ -79,8 +79,7 @@ public class FromFileNamesGenerator implements NamesGenerator {
                 filePath = Paths.get(fileName);
             }
 
-            return Files.readAllLines(filePath, StandardCharsets.UTF_8)
-                    .stream()
+            return Files.lines(filePath, StandardCharsets.UTF_8)
                     .map(String::trim)
                     .filter(s -> !s.isEmpty())
                     .collect(Collectors.toList());

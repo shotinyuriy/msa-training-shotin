@@ -37,6 +37,11 @@ docker-compose logs connect | grep -i Datagen
 docker exec -i -t f8d43549a52c bash root@f8d43549a52c:/#
 
 
+
 winpty docker exec -i -t f8d43549a52c bash root@f8d43549a52c:/#
 
 winpty docker exec -i -t f8d43549a52c bash root@f8d43549a52c
+
+docker exec -i -t 6ee6223a3ce3 bash
+2
+root@6ee6223a3ce3:/#
