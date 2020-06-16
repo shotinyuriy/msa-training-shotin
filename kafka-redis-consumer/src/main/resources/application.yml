@@ -1,0 +1,27 @@
+server:
+  port: 9006
+spring:
+  profiles:
+    active: kafka-on-local
+  cloud:
+    stream:
+      bindings:
+        bank-accounts-input:
+          destination: bank-accounts
+        addresses-input:
+          destination: addresses
+        bank-account-infos-output:
+          destination: bank-account-infos
+        bank-account-infos-input:
+          destination: bank-account-infos
+
+bank-accounts:
+  kafka:
+    topic: bank-accounts
+---
+spring:
+  profiles: kafka-on-local
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: bank-accounts-group
