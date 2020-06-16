@@ -36,6 +36,16 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
     protected CassandraProperties cassandraProperties;
 
     @Override
+    protected String getContactPoints() {
+        return cassandraProperties.getContactPoints().get(0);
+    }
+
+    @Override
+    protected int getPort() {
+        return cassandraProperties.getPort();
+    }
+
+    @Override
     protected String getKeyspaceName() {
         return cassandraProperties.getKeyspaceName();
     }
@@ -53,8 +63,8 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
     @Override
     public List<CreateKeyspaceSpecification> getKeyspaceCreations() {
         CreateKeyspaceSpecification ckss = CreateKeyspaceSpecification.createKeyspace(getKeyspaceName());
-        DataCenterReplication dcr = DataCenterReplication.of("dc1", 3L);
-        ckss.ifNotExists(true).withNetworkReplication(dcr);
+//        DataCenterReplication dcr = DataCenterReplication.of("dc1", 1L);
+        ckss = ckss.ifNotExists(true);//.withNetworkReplication(dcr);
         return Collections.singletonList(ckss);
     }
 

@@ -5,6 +5,7 @@ spring:
     active: kafka-on-local, 1-step
   data:
     cassandra:
+      contact-points: localhost
       keyspace-name: bankkeyspace
       schema-action: create_if_not_exists
       port: 9042
