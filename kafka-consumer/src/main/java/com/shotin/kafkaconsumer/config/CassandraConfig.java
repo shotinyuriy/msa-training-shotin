@@ -22,16 +22,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Cassandra cluster is method is already implemented in {@link org.springframework.data.cassandra.config.AbstractClusterConfiguration}
+ *
+ * Overriding required methods to replace empty configurations with real values from CassandraProperties
+ * provided in the Spring Boot configuration file
+ */
 @Configuration
 @EnableCassandraRepositories(basePackageClasses = {BankAccountRepository.class})
 public class CassandraConfig extends AbstractCassandraConfiguration {
 
-    @Value("${spring.data.cassandra.keyspace-name}")
-    protected String keySpaceName;
+    @Autowired
+    protected CassandraProperties cassandraProperties;
 
     @Override
     protected String getKeyspaceName() {
-        return keySpaceName;
+        return cassandraProperties.getKeyspaceName();
     }
 
     @Override
@@ -41,23 +47,15 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 
     @Override
     public SchemaAction getSchemaAction() {
-        return SchemaAction.CREATE_IF_NOT_EXISTS;
+        return SchemaAction.valueOf(cassandraProperties.getSchemaAction().toUpperCase());
     }
 
-    @Bean
-    public CassandraClusterFactoryBean cluster(@Autowired CassandraProperties cassandraProperties) {
-        CassandraClusterFactoryBean cluster = new CassandraClusterFactoryBean();
-        cluster.setContactPoints(cassandraProperties.getContactPoints().get(0));
-        cluster.setPort(cassandraProperties.getPort());
-        cluster.setKeyspaceCreations(Collections.singletonList(createKeyspaceSpecification()));
-        return cluster;
-    }
-
-    public CreateKeyspaceSpecification createKeyspaceSpecification() {
+    @Override
+    public List<CreateKeyspaceSpecification> getKeyspaceCreations() {
         CreateKeyspaceSpecification ckss = CreateKeyspaceSpecification.createKeyspace(getKeyspaceName());
         DataCenterReplication dcr = DataCenterReplication.of("dc1", 3L);
-        ckss.ifNotExists(true).createKeyspace(getKeyspaceName()).withNetworkReplication(dcr);
-        return ckss;
+        ckss.ifNotExists(true).withNetworkReplication(dcr);
+        return Collections.singletonList(ckss);
     }
 
     public static List<String> loadStartUpScriptsFromResource(String resourceName) {

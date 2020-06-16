@@ -41,15 +41,6 @@ public class TestCassandraConfig extends AbstractCassandraConfiguration {
     }
 
     @Bean
-    public CassandraClusterFactoryBean cluster() {
-        CassandraClusterFactoryBean cluster = new CassandraClusterFactoryBean();
-        cluster.setContactPoints("127.0.0.1");
-        cluster.setPort(9142);
-        cluster.setKeyspaceCreations(Collections.singletonList(createKeyspaceSpecification()));
-        return cluster;
-    }
-
-    @Bean
     public CassandraMappingContext mappingContext() throws Exception {
         BasicCassandraMappingContext mappingContext = new BasicCassandraMappingContext();
         mappingContext.setUserTypeResolver(
@@ -58,10 +49,11 @@ public class TestCassandraConfig extends AbstractCassandraConfiguration {
         return mappingContext;
     }
 
-    public CreateKeyspaceSpecification createKeyspaceSpecification() {
+    @Override
+    public List<CreateKeyspaceSpecification> getKeyspaceCreations() {
         CreateKeyspaceSpecification ckss = CreateKeyspaceSpecification.createKeyspace(getKeyspaceName());
         DataCenterReplication dcr = DataCenterReplication.of("dc1", 3L);
-        ckss.ifNotExists(true).createKeyspace(getKeyspaceName()).withNetworkReplication(dcr);
-        return ckss;
+        ckss.ifNotExists(true).withNetworkReplication(dcr);
+        return Collections.singletonList(ckss);
     }
 }
