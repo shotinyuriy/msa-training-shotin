@@ -43,6 +43,12 @@ services:
 #      - CASSANDRA_SEEDS=cassandra
 #      - CASSANDRA_PASSWORD_SEEDER=yes
 #      - CASSANDRA_PASSWORD=cassandra
+  accounts-redis:
+    image: 'redis:6.0.5'
+    hostname: accounts-redis
+    container_name: accounts-redis
+    ports:
+      - "6379:6379"
 
 volumes:
   cassandra_data:

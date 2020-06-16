@@ -3,3 +3,4 @@
 - kafka-consumer: 9003
 - user-cassandra-request: 9004
 - address-generator: 9005
+- kafka-redis-consumer: 9006
