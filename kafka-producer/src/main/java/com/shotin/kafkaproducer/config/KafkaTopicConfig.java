@@ -2,6 +2,7 @@ package com.shotin.kafkaproducer.config;
 
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.config.TopicConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -30,6 +31,11 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic bankAccountsTopic() {
-        return new NewTopic(bankAccountsTopic, 1, (short) 1);
+        Map<String, String> configs = new HashMap<>();
+        configs.put(TopicConfig.RETENTION_BYTES_CONFIG, String.valueOf(1024*100));
+        configs.put(TopicConfig.RETENTION_MS_CONFIG, String.valueOf(1000*60*60));
+
+        return new NewTopic(bankAccountsTopic, 1, (short) 1)
+                .configs(configs);
     }
 }
