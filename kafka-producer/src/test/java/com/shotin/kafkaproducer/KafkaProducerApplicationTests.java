@@ -1,6 +1,6 @@
 package com.shotin.kafkaproducer;
 
-import com.shotin.kafkaproducer.kafka.BankAccountPublisher;
+import com.shotin.kafkaproducer.kafka.AsyncBankAccountPublisher;
 import com.shotin.kafkaproducer.rest.KafkaPublisherResource;
 import com.shotin.kafkaproducer.service.BankAccountGenerator;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ class KafkaProducerApplicationTests {
 
 	@Test
 	void contextLoads() {
-		BankAccountPublisher bankAccountPublisher = applicationContext.getBean(BankAccountPublisher.class);
+		AsyncBankAccountPublisher asyncBankAccountPublisher = applicationContext.getBean(AsyncBankAccountPublisher.class);
 		BankAccountGenerator bankAccountGenerator = applicationContext.getBean(BankAccountGenerator.class);
 		KafkaPublisherResource kafkaMessageResource = applicationContext.getBean(KafkaPublisherResource.class);
 	}

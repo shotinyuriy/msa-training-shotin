@@ -1,6 +1,6 @@
 package com.shotin.kafkaproducer.rest;
 
-import com.shotin.kafkaproducer.kafka.BankAccountPublisher;
+import com.shotin.kafkaproducer.kafka.AsyncBankAccountPublisher;
 import com.shotin.bankaccount.model.kafka.BankAccount;
 import com.shotin.bankaccount.model.kafka.BankAccountList;
 import com.shotin.kafkaproducer.model.BankAccountSchedulerConfig;
@@ -20,16 +20,16 @@ public class KafkaPublisherResource {
 
     private final Logger LOG = LoggerFactory.getLogger(KafkaPublisherResource.class);
 
-    private BankAccountPublisher bankAccountPublisher;
+    private AsyncBankAccountPublisher asyncBankAccountPublisher;
     private BankAccountGenerator bankAccountGenerator;
     private BankAccountTypeEnricher bankAccountTypeEnricher;
     private BankAccountsScheduler bankAccountsScheduler;
 
-    public KafkaPublisherResource(@Autowired BankAccountPublisher bankAccountPublisher,
+    public KafkaPublisherResource(@Autowired AsyncBankAccountPublisher asyncBankAccountPublisher,
                                   @Autowired BankAccountGenerator bankAccountGenerator,
                                   @Autowired BankAccountTypeEnricher bankAccountTypeEnricher,
                                   @Autowired BankAccountsScheduler bankAccountsScheduler) {
-        this.bankAccountPublisher = bankAccountPublisher;
+        this.asyncBankAccountPublisher = asyncBankAccountPublisher;
         this.bankAccountGenerator = bankAccountGenerator;
         this.bankAccountTypeEnricher = bankAccountTypeEnricher;
         this.bankAccountsScheduler = bankAccountsScheduler;
@@ -42,7 +42,7 @@ public class KafkaPublisherResource {
             return ResponseEntity.badRequest().build();
         }
 
-        bankAccountPublisher.sendBankAccount(bankAccount);
+        asyncBankAccountPublisher.sendBankAccount(bankAccount);
 
         return ResponseEntity.ok().build();
     }
@@ -54,7 +54,7 @@ public class KafkaPublisherResource {
             LOG.info("Retrieved Bank Account "+bankAccount);
             bankAccount = bankAccountTypeEnricher.enrich(bankAccount);
             LOG.info("Enriched Bank Account "+bankAccount);
-            bankAccountPublisher.sendBankAccount(bankAccount);
+            asyncBankAccountPublisher.sendBankAccount(bankAccount);
         });
         return bankAccountFlux;
     }
@@ -66,7 +66,7 @@ public class KafkaPublisherResource {
             LOG.info("Retrieved Bank Account "+bankAccountList);
             bankAccountList.getBankAccounts().stream()
                     .map(bankAccount -> bankAccountTypeEnricher.enrich(bankAccount))
-                    .forEach(bankAccount -> bankAccountPublisher.sendBankAccount(bankAccount));
+                    .forEach(bankAccount -> asyncBankAccountPublisher.sendBankAccount(bankAccount));
             LOG.info("Enriched Bank Accounts "+bankAccountList);
         });
         return bankAccountFlux;

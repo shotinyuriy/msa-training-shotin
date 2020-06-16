@@ -1,7 +1,7 @@
 package com.shotin.kafkaproducer.scheduler;
 
 
-import com.shotin.kafkaproducer.kafka.BankAccountPublisher;
+import com.shotin.kafkaproducer.kafka.AsyncBankAccountPublisher;
 import com.shotin.bankaccount.model.kafka.BankAccount;
 import com.shotin.bankaccount.model.kafka.BankAccountList;
 import com.shotin.kafkaproducer.model.BankAccountSchedulerConfig;
@@ -32,14 +32,14 @@ public class BankAccountsScheduler {
     private Predicate<BankAccount> lastnameFilterByRegexp = null;
 
     private BankAccountGenerator bankAccountGenerator;
-    private BankAccountPublisher bankAccountPublisher;
+    private AsyncBankAccountPublisher asyncBankAccountPublisher;
     private BankAccountTypeEnricher bankAccountTypeEnricher;
 
     public BankAccountsScheduler(@Autowired BankAccountGenerator bankAccountGenerator,
-                                 @Autowired BankAccountPublisher bankAccountPublisher,
+                                 @Autowired AsyncBankAccountPublisher asyncBankAccountPublisher,
                                  @Autowired BankAccountTypeEnricher bankAccountTypeEnricher) {
         this.bankAccountGenerator = bankAccountGenerator;
-        this.bankAccountPublisher = bankAccountPublisher;
+        this.asyncBankAccountPublisher = asyncBankAccountPublisher;
         this.bankAccountTypeEnricher = bankAccountTypeEnricher;
         enabled = true;
         initializeLastnameFilterByRegexp();
@@ -95,7 +95,7 @@ public class BankAccountsScheduler {
                 bankAccountList.getBankAccounts().stream()
                         .filter(lastnameFilterByRegexp)
                         .map(bankAccount -> bankAccountTypeEnricher.enrich(bankAccount))
-                        .forEach(bankAccount -> bankAccountPublisher.sendBankAccount(bankAccount));
+                        .forEach(bankAccount -> asyncBankAccountPublisher.sendBankAccount(bankAccount));
             });
             LOG.info("Finished generateAndPublishToKafka");
         } else {
