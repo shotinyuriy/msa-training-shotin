@@ -2,10 +2,10 @@ package com.shotin.consumer.redis.model;
 
 import com.shotin.bankaccount.model.kafka.Address;
 import lombok.Data;
-import org.springframework.data.redis.core.RedisHash;
+import lombok.NoArgsConstructor;
 
 @Data
-@RedisHash
+@NoArgsConstructor
 public class AddressEntity {
 
     private String street;

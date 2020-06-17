@@ -10,9 +10,16 @@ import org.springframework.stereotype.Component;
 public class BankAccountInfoConverter {
 
     public BankAccountInfoEntity from(JoinedBankAccountInfo joinedBankAccountInfo) {
+        if (joinedBankAccountInfo.getUuid() ==null || joinedBankAccountInfo.getBankAccount() == null) {
+            return null;
+        }
         BankAccountEntity bankAccountEntity = new BankAccountEntity(joinedBankAccountInfo.getBankAccount());
-        AddressEntity addressEntity = new AddressEntity(joinedBankAccountInfo.getAddress());
-        BankAccountInfoEntity bankAccountInfoEntity = new BankAccountInfoEntity(bankAccountEntity, addressEntity);
+        AddressEntity addressEntity = null;
+        if (joinedBankAccountInfo.getAddress() != null) {
+            addressEntity = new AddressEntity(joinedBankAccountInfo.getAddress());
+        }
+        BankAccountInfoEntity bankAccountInfoEntity =
+                new BankAccountInfoEntity(joinedBankAccountInfo.getUuid(), bankAccountEntity, addressEntity);
         return bankAccountInfoEntity;
     }
 }
