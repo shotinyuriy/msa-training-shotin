@@ -21,9 +21,12 @@ spring:
         bank-account-infos-input:
           destination: bank-account-infos
 
-bank-accounts:
-  kafka:
-    topic: bank-accounts
+kafka:
+  topics:
+    bank-accounts-topic: bank-accounts
+    addresses-topic: addresses
+    bank-account-infos-topic: bank-account-infos
+
 ---
 spring:
   profiles: kafka-on-local

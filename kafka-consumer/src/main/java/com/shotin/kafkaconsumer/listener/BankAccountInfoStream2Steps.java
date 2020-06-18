@@ -52,9 +52,9 @@ public class BankAccountInfoStream2Steps {
 
     @StreamListener
     public void saveToCassandra(
-            @Input(BANK_ACCOUNT_INFOS_INPUT) KTable<UUID, JoinedBankAccountInfo> joinedBankAccountInfoTable) {
+            @Input(BANK_ACCOUNT_INFOS_INPUT) KStream<UUID, JoinedBankAccountInfo> joinedBankAccountInfoTable) {
 
-        joinedBankAccountInfoTable.toStream()
+        joinedBankAccountInfoTable
                 .foreach((key, joinedBankAccountInfo) -> {
                     LOG.info("Processing joinedBankAccount info in KTable.foreach key="+key+
                             " HAS address="+String.valueOf(joinedBankAccountInfo.getAddress() != null).toUpperCase());

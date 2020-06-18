@@ -50,16 +50,16 @@ public class BankAccountsInfoStream {
     public void saveToRedis(
             @Input(BANK_ACCOUNT_INFOS_INPUT) KStream<UUID, JoinedBankAccountInfo> joinedBankAccountInfos) {
         joinedBankAccountInfos
-//                .peek((uuid, joinBankAccountInfo) -> joinBankAccountInfo.setExecutionTime(System.currentTimeMillis()))
                 .peek((uuid, joinBankAccountInfo) -> LOG.info("START {} = {}", uuid, System.currentTimeMillis()))
+                .peek((uuid, joinBankAccountInfo) -> joinBankAccountInfo.setExecutionTime(System.currentTimeMillis()))
                 .peek((uuid, joinedBankAccountInfo) -> {
                     BankAccountInfoEntity bankAccountInfo = bankAccountInfoConverter.from(joinedBankAccountInfo);
                     bankAccountInfoRepository.save(bankAccountInfo);
                 })
-                .peek((uuid, joinBankAccountInfo) -> LOG.info("END {} = {}", uuid, System.currentTimeMillis()));
-//                .foreach((uuid, joinedBankAccountInfo) -> {
-//                    long executionTime = (System.currentTimeMillis() - joinedBankAccountInfo.getExecutionTime());
-//                    LOG.info("EXECUTION TIME FOR {} = {}", uuid, executionTime);
-//                });
+                .peek((uuid, joinBankAccountInfo) -> LOG.info("END {} = {}", uuid, System.currentTimeMillis()))
+                .foreach((uuid, joinedBankAccountInfo) -> {
+                    long executionTime = (System.currentTimeMillis() - joinedBankAccountInfo.getExecutionTime());
+                    LOG.info("EXECUTION TIME FOR {} = {} ms", uuid, executionTime);
+                });
     }
 }

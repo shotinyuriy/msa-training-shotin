@@ -12,5 +12,5 @@ public interface ReactiveBankAccountInfoRepository {
     Mono<BankAccountInfoEntity> findById(UUID uuid);
     Flux<BankAccountInfoEntity> findAll();
     Mono<BankAccountInfoEntity> save(BankAccountInfoEntity bankAccountInfoEntity);
-    Mono<Boolean> delete(UUID uuid);
+    Mono<Void> deleteById(UUID uuid);
 }

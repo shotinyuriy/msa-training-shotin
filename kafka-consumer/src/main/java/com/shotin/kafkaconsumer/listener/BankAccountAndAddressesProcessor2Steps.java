@@ -30,5 +30,5 @@ public interface BankAccountAndAddressesProcessor2Steps {
     KStream<UUID, JoinedBankAccountInfo> bankAccountInfosOutput();
 
     @Input(BANK_ACCOUNT_INFOS_INPUT)
-    KTable<UUID, JoinedBankAccountInfo> bankAccountInfosInput();
+    KStream<UUID, JoinedBankAccountInfo> bankAccountInfosInput();
 }

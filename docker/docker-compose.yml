@@ -2,6 +2,8 @@
 version: '2'
 services:
   zookeeper:
+    labels:
+      - "msa-training"
     image: confluentinc/cp-zookeeper:5.5.0
     hostname: zookeeper
     container_name: zookeeper
@@ -12,6 +14,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   broker:
+    labels:
+      - "msa-training"
     image: confluentinc/cp-kafka:5.5.0
     hostname: broker
     container_name: broker
@@ -31,6 +35,8 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
 
   accounts-cassandra:
+    labels:
+      - "msa-training"
     image: 'cassandra:3.11'
     hostname: accounts-cassandra
     container_name: accounts-cassandra
@@ -44,6 +50,8 @@ services:
 #      - CASSANDRA_PASSWORD_SEEDER=yes
 #      - CASSANDRA_PASSWORD=cassandra
   accounts-redis:
+    labels:
+      - "msa-training"
     image: 'redis:6.0.5'
     hostname: accounts-redis
     container_name: accounts-redis

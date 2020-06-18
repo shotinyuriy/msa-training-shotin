@@ -6,7 +6,7 @@ public class JoinedBankAccountInfo {
     private UUID uuid;
     private BankAccount bankAccount;
     private Address address;
-//    transient private long executionTime;
+    transient private long executionTime;
 
     public JoinedBankAccountInfo() {
 
@@ -30,11 +30,11 @@ public class JoinedBankAccountInfo {
         return address;
     }
 
-//    public long getExecutionTime() {
-//        return executionTime;
-//    }
-//
-//    public void setExecutionTime(long executionTime) {
-//        this.executionTime = executionTime;
-//    }
+    public long getExecutionTime() {
+        return executionTime;
+    }
+
+    public void setExecutionTime(long executionTime) {
+        this.executionTime = executionTime;
+    }
 }
