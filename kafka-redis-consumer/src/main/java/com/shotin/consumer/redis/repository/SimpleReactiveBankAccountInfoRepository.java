@@ -16,6 +16,14 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * Implements the ReactiveCrudRepository for BankAccountInfoEntity
+ *
+ * The BankAccountInfoEntity is serialized to a RedisHash = Java Map&lt;String, String&gt;
+ * Serialization to Map and deserialization to BankAccountInfoEntity implemented in the
+ * BankAccountInfoEntity itself
+ *
+ */
 @Component
 public class SimpleReactiveBankAccountInfoRepository
         implements ReactiveCrudRepository<BankAccountInfoEntity, UUID>, ReactiveBankAccountInfoRepository {
@@ -34,17 +42,19 @@ public class SimpleReactiveBankAccountInfoRepository
     }
 
     private String keyForHash(UUID uuid) {
-        return keyForSet() + ":" + uuid.toString();
+        return keyForSet() + ":" + uuid;
     }
 
     @Override
     public <S extends BankAccountInfoEntity> Flux<S> saveAll(Iterable<S> entities) {
-        return null;
+        return Flux.fromIterable(entities)
+                .flatMap(entity -> save(entity));
     }
 
     @Override
     public <S extends BankAccountInfoEntity> Flux<S> saveAll(Publisher<S> entityStream) {
-        return null;
+        return Flux.from(entityStream)
+                .flatMap(entity -> save(entity));
     }
 
     @Override
@@ -102,8 +112,11 @@ public class SimpleReactiveBankAccountInfoRepository
     }
 
     @Override
-    public Mono<BankAccountInfoEntity> save(BankAccountInfoEntity bankAccountInfoEntity) {
+    public <S extends BankAccountInfoEntity> Mono<S> save(S bankAccountInfoEntity) {
         final String keyForHash = keyForHash(bankAccountInfoEntity.getUuid());
+        if (bankAccountInfoEntity.getUuid() == null) {
+            return Mono.error(new Exception("UUID is null"));
+        }
         return reactiveRedisTemplate.opsForHash()
                 .putAll(keyForHash, bankAccountInfoEntity.asMap())
                 .flatMap(success -> {
@@ -111,12 +124,12 @@ public class SimpleReactiveBankAccountInfoRepository
                         return reactiveRedisTemplate.opsForSet(stringKeySerializationContext)
                                 .add(keyForSet(), bankAccountInfoEntity.getUuid().toString());
                     } else {
-                        return Mono.error(new Exception("Saving to Hash Failed"));
+                        return Mono.error(new Exception("Saving to Redis Hash Failed"));
                     }
                 })
                 .flatMap(result -> Long.valueOf(1).equals(result)
                         ? Mono.just(bankAccountInfoEntity)
-                        : null);
+                        : Mono.error(new Exception("Saving to Redis Set Failed")));
     }
 
     @Override
@@ -127,7 +140,6 @@ public class SimpleReactiveBankAccountInfoRepository
                 .flatMap(success -> Boolean.TRUE.equals(success)
                         ? reactiveRedisTemplate.opsForSet(stringKeySerializationContext).remove(keyForSet(), uuid.toString())
                         : Mono.just(0L))
-                .doOnEach(signal -> LOG.info("DELETE BY ID RESULT " + signal.get()))
                 .then();
     }
 

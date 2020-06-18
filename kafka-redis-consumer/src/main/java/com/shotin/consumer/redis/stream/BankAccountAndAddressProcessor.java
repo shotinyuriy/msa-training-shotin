@@ -28,6 +28,6 @@ public interface BankAccountAndAddressProcessor {
     @Output(BANK_ACCOUNT_INFOS_OUTPUT)
     KStream<UUID, JoinedBankAccountInfo> bankAccountInfoOutput();
 
-    @Output(BANK_ACCOUNT_INFOS_INPUT)
-    KStream<UUID, JoinedBankAccountInfo> bankAccountInfoInput();
+//    @Input(BANK_ACCOUNT_INFOS_INPUT)
+//    KStream<UUID, JoinedBankAccountInfo> bankAccountInfoInput();
 }

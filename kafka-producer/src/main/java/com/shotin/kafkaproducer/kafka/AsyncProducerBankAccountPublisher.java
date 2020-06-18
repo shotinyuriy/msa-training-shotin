@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-@Primary
 @Service
 public class AsyncProducerBankAccountPublisher implements AsyncBankAccountPublisher {
 

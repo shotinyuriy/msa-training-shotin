@@ -60,6 +60,8 @@ public class BankAccountInfoRepositoryTest {
         UUID uuid2 = UUID.randomUUID();
         BankAccountInfoEntity bankAccountInfoEntity2 = createBankAccountInfo(uuid2, "-two");
 
+        BankAccountInfoEntity bankAccountInfoEntity3 = createBankAccountInfo(null, "-three");
+
         reactiveBankAccountInfoRepository.save(bankAccountInfoEntity)
                 .doOnError(e -> LOG.error(e, () -> "SAVE 1 FAILED"))
                 .subscribe(result -> LOG.info(() -> "SAVE 1 SUCCESS "+result));
@@ -68,10 +70,17 @@ public class BankAccountInfoRepositoryTest {
                 .doOnError(e -> LOG.error(e, () -> "SAVE 2 FAILED"))
                 .subscribe(result -> LOG.info(() -> "SAVE 2 SUCCESS "+result));
 
+        reactiveBankAccountInfoRepository.save(bankAccountInfoEntity3)
+                .doOnError(e -> LOG.error(e, () -> "SAVE 3 FAILED"))
+                .subscribe(result -> LOG.info(() -> "SAVE 3 SUCCESS "+result));
+
         BankAccountInfoEntity foundRxBankAccountInfo = reactiveBankAccountInfoRepository.findById(uuid).block();
 
         reactiveBankAccountInfoRepository.findAll().toIterable()
                 .forEach(bankAccountInfo -> LOG.info(() -> "REACTIVE BANK ACCOUNT INFO: "+bankAccountInfo));
+
+        reactiveBankAccountInfoRepository.count()
+                .subscribe(count -> LOG.info(() -> "COUNT = "+count));
 
         reactiveBankAccountInfoRepository
                 .deleteById(uuid)
@@ -80,7 +89,7 @@ public class BankAccountInfoRepositoryTest {
 
         reactiveBankAccountInfoRepository
                 .deleteById(uuid2)
-                .doOnSuccess(result -> LOG.info(()->"DO DELETED 1 "+result))
+                .doOnSuccess(result -> LOG.info(()->"DO DELETED 2 "+result))
                 .subscribe(result -> LOG.info(()->"SUB DELETED 2 "+result));
     }
 

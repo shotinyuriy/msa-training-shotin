@@ -1,4 +1,4 @@
-package com.shotin.kafkaproducer.config;
+package com.shotin.addressgenerator.config;
 
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -19,8 +19,8 @@ public class KafkaTopicConfig {
     @Autowired
     private KafkaProperties kafkaProperties;
 
-    @Value("${bank-accounts.kafka.topic}")
-    private String bankAccountsTopic;
+    @Value("${addresses.kafka.topic:addresses}")
+    private String addressesTopic;
 
     @Bean
     public KafkaAdmin kafkaAdmin() {
@@ -30,12 +30,12 @@ public class KafkaTopicConfig {
     }
 
     @Bean
-    public NewTopic bankAccountsTopic() {
+    public NewTopic addressesTopic() {
         Map<String, String> configs = new HashMap<>();
         configs.put(TopicConfig.RETENTION_BYTES_CONFIG, String.valueOf(1024*1024*100));
         configs.put(TopicConfig.RETENTION_MS_CONFIG, String.valueOf(1000*60));
 
-        return new NewTopic(bankAccountsTopic, 2, (short) 1)
+        return new NewTopic(addressesTopic, 2, (short) 1)
                 .configs(configs);
     }
 }

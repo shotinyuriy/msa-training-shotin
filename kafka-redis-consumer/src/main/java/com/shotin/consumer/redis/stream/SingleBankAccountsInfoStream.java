@@ -22,46 +22,38 @@ import java.util.UUID;
 import static com.shotin.consumer.redis.stream.BankAccountAndAddressProcessor.*;
 
 @Profile("!test")
-public class BankAccountsInfoStream {
+@EnableBinding(BankAccountAndAddressProcessor.class)
+public class SingleBankAccountsInfoStream {
 
     private Logger LOG = LoggerFactory.getLogger(LoggerFactory.class);
 
     private BankAccountInfoConverter bankAccountInfoConverter;
     private BankAccountInfoRepository bankAccountInfoRepository;
 
-    public BankAccountsInfoStream(@Autowired BankAccountInfoConverter bankAccountInfoConverter,
-                                  @Autowired BankAccountInfoRepository bankAccountInfoRepository) {
+    public SingleBankAccountsInfoStream(@Autowired BankAccountInfoConverter bankAccountInfoConverter,
+                                        @Autowired BankAccountInfoRepository bankAccountInfoRepository) {
         this.bankAccountInfoConverter = bankAccountInfoConverter;
         this.bankAccountInfoRepository = bankAccountInfoRepository;
     }
 
-//    @StreamListener
-//    @SendTo(BANK_ACCOUNT_INFOS_OUTPUT)
+    @StreamListener
+    @SendTo(BANK_ACCOUNT_INFOS_OUTPUT)
     public KStream<UUID, JoinedBankAccountInfo> joinBankAccountInfo(
-//            @Input(BANK_ACCOUNTS_INPUT)
-                    KTable<UUID, BankAccount> bankAccountTable,
-//            @Input(ADDRESSES_INPUT)
-                    KTable<UUID, Address> addressTable) {
-        return bankAccountTable.join(addressTable, (bankAccount, address) ->
-                new JoinedBankAccountInfo(bankAccount.getUuid(), bankAccount, address)
-        ).toStream();
-    }
+            @Input(BANK_ACCOUNTS_INPUT) KTable<UUID, BankAccount> bankAccountTable,
+            @Input(ADDRESSES_INPUT) KTable<UUID, Address> addressTable) {
 
-//    @StreamListener
-    public void saveToRedis(
-//            @Input(BANK_ACCOUNT_INFOS_INPUT)
-                    KStream<UUID, JoinedBankAccountInfo> joinedBankAccountInfos) {
-        joinedBankAccountInfos
-                .peek((uuid, joinBankAccountInfo) -> LOG.info("START {} = {}", uuid, System.currentTimeMillis()))
+        return bankAccountTable.join(addressTable, (bankAccount, address) ->
+                new JoinedBankAccountInfo(bankAccount.getUuid(), bankAccount, address))
+                .toStream()
                 .peek((uuid, joinBankAccountInfo) -> joinBankAccountInfo.setExecutionTime(System.currentTimeMillis()))
                 .peek((uuid, joinedBankAccountInfo) -> {
                     BankAccountInfoEntity bankAccountInfo = bankAccountInfoConverter.from(joinedBankAccountInfo);
                     bankAccountInfoRepository.save(bankAccountInfo);
                 })
-                .peek((uuid, joinBankAccountInfo) -> LOG.info("END {} = {}", uuid, System.currentTimeMillis()))
-                .foreach((uuid, joinedBankAccountInfo) -> {
+                .peek((uuid, joinBankAccountInfo) -> LOG.info("NON-REACTIVE: {} SUCCESSFULLY SAVED TO REDIS", uuid))
+                .peek((uuid, joinedBankAccountInfo) -> {
                     long executionTime = (System.currentTimeMillis() - joinedBankAccountInfo.getExecutionTime());
-                    LOG.info("EXECUTION TIME FOR {} = {} ms", uuid, executionTime);
+                    LOG.info("NON-REACTIVE: EXECUTION TIME FOR  {} = {} ms", uuid, executionTime);
                 });
     }
 }
