@@ -6,6 +6,8 @@ import com.shotin.bankaccount.model.kafka.JoinedBankAccountInfo;
 import com.shotin.consumer.redis.model.AccountType;
 import com.shotin.consumer.redis.model.BankAccountInfoEntity;
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -22,7 +24,14 @@ public class BankAccountInfoConverterTest {
     private static final String CITY = "City";
     private static final String STATE = "State";
 
-    BankAccountInfoConverter bankAccountInfoConverter = new BankAccountInfoConverter();
+    BankAccountConverter bankAccountConverter = new BankAccountConverter();
+    AddressConverter addressConverter = new AddressConverter();
+    BankAccountInfoConverter bankAccountInfoConverter
+            = new BankAccountInfoConverter(addressConverter, bankAccountConverter);
+
+    @BeforeEach
+    public void setUp() {
+    }
 
     @Test
     public void testFrom_AddressAndBankAccountAreNull() {

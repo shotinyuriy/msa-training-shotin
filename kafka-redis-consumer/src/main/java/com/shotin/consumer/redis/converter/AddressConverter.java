@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class AddressConverter {
 
     public AddressEntity from(Address address) {
-        if (address.getUuid() == null) {
+        if (address == null) {
             return null;
         }
 

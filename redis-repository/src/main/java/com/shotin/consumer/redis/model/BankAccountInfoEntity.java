@@ -40,6 +40,9 @@ public class BankAccountInfoEntity {
                 case "uuid":
                     uuid = UUID.fromString(String.valueOf(map.get("uuid")));
                     break;
+                case "bankAccount.uuid":
+                    bankAccount.setUuid(UUID.fromString(String.valueOf(entry.getValue())));
+                    break;
                 case "bankAccount.firstName":
                     bankAccount.setFirstName(String.valueOf(entry.getValue()));
                     break;
@@ -69,10 +72,12 @@ public class BankAccountInfoEntity {
 
     }
 
-    public Map<String, Object> asMap() {
-        Map<String, Object> map = new HashMap<>();
+    public Map<String, String> asMap() {
+        Map<String, String> map = new HashMap<>();
         putIfNotNull(map, "uuid", uuid);
         if (bankAccount != null) {
+            putIfNotNull(map, "_class", this.getClass().getName());
+            putIfNotNull(map, "bankAccount.uuid", bankAccount.getUuid());
             putIfNotNull(map, "bankAccount.lastName", bankAccount.getLastName());
             putIfNotNull(map, "bankAccount.firstName", bankAccount.getFirstName());
             putIfNotNull(map, "bankAccount.patronymic", bankAccount.getPatronymic());
@@ -87,7 +92,7 @@ public class BankAccountInfoEntity {
         return map;
     }
 
-    private void putIfNotNull(Map<String, Object> map, String key, Object value) {
+    private void putIfNotNull(Map<String, String> map, String key, Object value) {
         if (value != null) {
             map.put(key, String.valueOf(value));
         }

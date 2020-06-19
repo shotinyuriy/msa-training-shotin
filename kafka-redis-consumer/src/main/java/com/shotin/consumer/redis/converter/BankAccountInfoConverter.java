@@ -1,7 +1,5 @@
 package com.shotin.consumer.redis.converter;
 
-import com.shotin.bankaccount.model.kafka.Address;
-import com.shotin.bankaccount.model.kafka.BankAccount;
 import com.shotin.bankaccount.model.kafka.JoinedBankAccountInfo;
 import com.shotin.consumer.redis.model.AddressEntity;
 import com.shotin.consumer.redis.model.BankAccountEntity;
@@ -12,11 +10,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class BankAccountInfoConverter {
 
-    @Autowired
-    private AddressConverter addressConverter;
+    private final AddressConverter addressConverter;
 
-    @Autowired
-    private BankAccountConverter bankAccountConverter;
+    private final BankAccountConverter bankAccountConverter;
+
+    public BankAccountInfoConverter(@Autowired AddressConverter addressConverter,
+                                    @Autowired BankAccountConverter bankAccountConverter) {
+        this.addressConverter = addressConverter;
+        this.bankAccountConverter = bankAccountConverter;
+    }
 
     public BankAccountInfoEntity from(JoinedBankAccountInfo joinedBankAccountInfo) {
         if (joinedBankAccountInfo.getUuid() ==null || joinedBankAccountInfo.getBankAccount() == null) {

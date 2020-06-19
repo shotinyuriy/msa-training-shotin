@@ -42,9 +42,7 @@ public class RedisConfig {
 
         RedisSerializationContext<String, BankAccountInfoEntity> redisSerializationContext =
                 RedisSerializationContext
-                        .<String, BankAccountInfoEntity>newSerializationContext()
-                        .key(RedisSerializer.string())
-                        .hashKey(RedisSerializer.string())
+                        .<String, BankAccountInfoEntity>newSerializationContext(RedisSerializer.string())
                         .build();
 
         ReactiveRedisTemplate<String, BankAccountInfoEntity> template

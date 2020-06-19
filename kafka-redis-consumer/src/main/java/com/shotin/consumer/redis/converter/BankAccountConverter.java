@@ -8,10 +8,11 @@ import org.springframework.stereotype.Component;
 public class BankAccountConverter {
 
     public BankAccountEntity from(BankAccount bankAccount) {
-        if (bankAccount.getUuid() ==null) {
+        if (bankAccount == null) {
             return null;
         }
         BankAccountEntity bankAccountEntity = new BankAccountEntity();
+        bankAccountEntity.setUuid(bankAccount.getUuid());
         bankAccountEntity.setFirstName(bankAccount.getFirstName());
         bankAccountEntity.setLastName(bankAccount.getLastName());
         bankAccountEntity.setPatronymic(bankAccount.getPatronymic());
