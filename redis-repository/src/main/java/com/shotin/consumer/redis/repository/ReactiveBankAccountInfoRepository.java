@@ -1,7 +1,6 @@
 package com.shotin.consumer.redis.repository;
 
 import com.shotin.consumer.redis.model.BankAccountInfoEntity;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

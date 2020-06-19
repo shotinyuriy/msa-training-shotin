@@ -1,8 +1,6 @@
 package com.shotin.consumer.redis.config;
 
 import com.shotin.consumer.redis.model.BankAccountInfoEntity;
-import com.shotin.consumer.redis.repository.ReactiveBankAccountInfoRepository;
-import com.shotin.consumer.redis.repository.SimpleReactiveBankAccountInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
@@ -14,8 +12,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
-
-import java.util.UUID;
 
 @Configuration
 @EnableRedisRepositories
@@ -49,10 +45,5 @@ public class RedisConfig {
                 = new ReactiveRedisTemplate<>(redisConnectionFactory(), redisSerializationContext);
 
         return template;
-    }
-
-    @Bean
-    public ReactiveBankAccountInfoRepository reactiveBankAccountInfoRepository() {
-        return new SimpleReactiveBankAccountInfoRepository(reactiveRedisTemplate());
     }
 }

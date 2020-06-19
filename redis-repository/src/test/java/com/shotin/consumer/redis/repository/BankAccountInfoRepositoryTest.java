@@ -14,7 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.Optional;
 import java.util.UUID;
 
-@ActiveProfiles("test")
+@ActiveProfiles("redis-repository-test")
 @SpringBootTest
 public class BankAccountInfoRepositoryTest {
 

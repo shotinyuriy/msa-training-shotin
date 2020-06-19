@@ -2,7 +2,6 @@ package com.shotin.consumer.redis.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 

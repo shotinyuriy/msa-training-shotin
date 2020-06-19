@@ -1,0 +1,46 @@
+plugins {
+//    id 'org.springframework.boot' version '2.2.8.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+    id 'maven'
+    id 'maven-publish'
+}
+
+group 'com.shotin'
+version '1.0.2-SNAPSHOT'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url "http://repo.spring.io/libs-release" }
+    maven { url "http://repo.spring.io/libs-milestone" }
+    maven { url "http://repo.spring.io/libs-snapshot" }
+}
+
+ext {
+    set('springCloudVersion', "Hoxton.SR4")
+    set('springBootVersion', "2.2.8.RELEASE")
+    set('springVersion', "5.2.7.RELEASE")
+}
+
+dependencies {
+    implementation 'org.springframework.data:spring-data-redis:2.3.1.RELEASE'
+    implementation 'io.lettuce:lettuce-core:5.3.1.RELEASE'
+
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    testImplementation('org.springframework.boot:spring-boot-starter-data-redis:2.2.8.RELEASE')
+    testImplementation('org.springframework.boot:spring-boot-starter-test:2.2.8.RELEASE') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

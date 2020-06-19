@@ -4,7 +4,6 @@ import com.shotin.consumer.redis.model.BankAccountInfoEntity;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -24,7 +23,6 @@ import java.util.UUID;
  * BankAccountInfoEntity itself
  *
  */
-@Component
 public class SimpleReactiveBankAccountInfoRepository
         implements ReactiveCrudRepository<BankAccountInfoEntity, UUID>, ReactiveBankAccountInfoRepository {
 
@@ -34,8 +32,7 @@ public class SimpleReactiveBankAccountInfoRepository
     private final RedisSerializationContext<String, String> stringKeySerializationContext =
             RedisSerializationContext.<String, String>newSerializationContext(RedisSerializer.string()).build();
 
-    @Autowired
-    private ReactiveRedisTemplate<String, BankAccountInfoEntity> reactiveRedisTemplate;
+    private final ReactiveRedisTemplate<String, BankAccountInfoEntity> reactiveRedisTemplate;
 
     private String keyForSet() {
         return BankAccountInfoEntity.BANK_ACCOUNT_INFO_KEY;
@@ -43,6 +40,10 @@ public class SimpleReactiveBankAccountInfoRepository
 
     private String keyForHash(UUID uuid) {
         return keyForSet() + ":" + uuid;
+    }
+
+    public SimpleReactiveBankAccountInfoRepository(ReactiveRedisTemplate<String, BankAccountInfoEntity> reactiveRedisTemplate) {
+        this.reactiveRedisTemplate = reactiveRedisTemplate;
     }
 
     @Override
