@@ -8,7 +8,6 @@ import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -142,6 +141,14 @@ public class SimpleReactiveBankAccountInfoRepository
                         ? reactiveRedisTemplate.opsForSet(stringKeySerializationContext).remove(keyForSet(), uuid.toString())
                         : Mono.just(0L))
                 .then();
+    }
+
+    @Override
+    public Flux<UUID> findAllKeys() {
+        return reactiveRedisTemplate.opsForSet(stringKeySerializationContext)
+                .members(keyForSet())
+                .filter(key -> key.length() == UUID_LENGTH)
+                .map(key -> UUID.fromString(key));
     }
 
     @Override
