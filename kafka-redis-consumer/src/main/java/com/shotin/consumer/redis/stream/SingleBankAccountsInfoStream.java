@@ -49,8 +49,9 @@ public class SingleBankAccountsInfoStream {
                 .peek((uuid, joinedBankAccountInfo) -> {
                     BankAccountInfoEntity bankAccountInfo = bankAccountInfoConverter.from(joinedBankAccountInfo);
                     bankAccountInfoRepository.save(bankAccountInfo);
+                    LOG.info("NON-REACTIVE: {} SUCCESSFULLY SAVED TO REDIS", uuid);
                 })
-                .peek((uuid, joinBankAccountInfo) -> LOG.info("NON-REACTIVE: {} SUCCESSFULLY SAVED TO REDIS", uuid))
+//                .peek((uuid, joinBankAccountInfo) -> LOG.info("NON-REACTIVE: {} SUCCESSFULLY SAVED TO REDIS", uuid))
                 .peek((uuid, joinedBankAccountInfo) -> {
                     long executionTime = (System.currentTimeMillis() - joinedBankAccountInfo.getExecutionTime());
                     LOG.info("NON-REACTIVE: EXECUTION TIME FOR  {} = {} ms", uuid, executionTime);

@@ -64,7 +64,8 @@ public class SimpleReactiveBankAccountInfoRepository
                 .collect(() -> new HashMap<Object, Object>(), (map, entry) -> {
                     map.put(entry.getKey(), entry.getValue());
                 })
-                .map(map -> new BankAccountInfoEntity(map));
+                .map(map -> new BankAccountInfoEntity(map))
+                .onErrorResume(ex -> Mono.empty());
     }
 
     @Override

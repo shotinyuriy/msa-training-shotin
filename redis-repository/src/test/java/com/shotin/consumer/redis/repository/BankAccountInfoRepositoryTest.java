@@ -75,6 +75,11 @@ public class BankAccountInfoRepositoryTest {
                 .subscribe(result -> LOG.info(() -> "SAVE 3 SUCCESS "+result));
 
         BankAccountInfoEntity foundRxBankAccountInfo = reactiveBankAccountInfoRepository.findById(uuid).block();
+        Assertions.assertNotNull(foundRxBankAccountInfo);
+
+        // NOT EXISTING CASE
+        BankAccountInfoEntity notFound = reactiveBankAccountInfoRepository.findById(UUID.randomUUID()).block();
+        Assertions.assertNull(notFound);
 
         reactiveBankAccountInfoRepository.findAll().toIterable()
                 .forEach(bankAccountInfo -> LOG.info(() -> "REACTIVE BANK ACCOUNT INFO: "+bankAccountInfo));

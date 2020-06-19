@@ -32,6 +32,7 @@ public class BankAccountInfoEntity {
     }
 
     public BankAccountInfoEntity(Map<Object, Object> map) {
+        if (map == null || map.isEmpty()) throw new IllegalArgumentException("The input Map should not be null");
         bankAccount = new BankAccountEntity();
         address = new AddressEntity();
         for(Map.Entry<Object, Object> entry : map.entrySet()) {
