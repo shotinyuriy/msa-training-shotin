@@ -34,6 +34,8 @@ public class KafkaConfig {
         Map<String, Object> config = new HashMap<>(kafkaProperties.buildProducerProperties());
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, UUIDSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        config.put(ProducerConfig.ACKS_CONFIG, 1);
+        config.put(ProducerConfig.RETRIES_CONFIG, 1);
         return new DefaultKafkaProducerFactory(config);
     }
 

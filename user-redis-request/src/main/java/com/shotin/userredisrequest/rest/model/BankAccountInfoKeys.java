@@ -7,6 +7,6 @@ import java.util.List;
 
 @Data
 @RequiredArgsConstructor
-public class BankAccountKeyInfoList {
+public class BankAccountInfoKeys {
     private final List<String> keys;
 }
