@@ -5,6 +5,13 @@ spring:
     active: kafka-on-local
   cloud:
     stream:
+      application-id: kafka-redis-consumer
+      kafka:
+        streams:
+          binder:
+            application-id: kafka-redis-consumer
+            consumer-properties:
+              group-id: kafka-redis-group
       bindings:
         bank-accounts-input:
           destination: bank-accounts
@@ -24,4 +31,4 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: bank-accounts-group
+      group-id: kafka-redis-group

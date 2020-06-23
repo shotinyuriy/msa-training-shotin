@@ -34,17 +34,17 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
 
-#  accounts-cassandra:
-#    labels:
-#      - "msa-training"
-#    image: 'cassandra:3.11'
-#    hostname: accounts-cassandra
-#    container_name: accounts-cassandra
-#    ports:
-#      - '7000:7000'
-#      - '9042:9042'
-#    volumes:
-#      - 'cassandra_data:/bitnami'
+  accounts-cassandra:
+    labels:
+      - "msa-training"
+    image: 'cassandra:3.11'
+    hostname: accounts-cassandra
+    container_name: accounts-cassandra
+    ports:
+      - '7000:7000'
+      - '9042:9042'
+    volumes:
+      - 'cassandra_data:/bitnami'
 #    environment:
 #      - CASSANDRA_SEEDS=cassandra
 #      - CASSANDRA_PASSWORD_SEEDER=yes

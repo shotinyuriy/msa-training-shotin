@@ -2,6 +2,7 @@ package com.shotin.consumer.redis.config;
 
 import com.shotin.bankaccount.model.kafka.BankAccount;
 import com.shotin.bankaccount.model.kafka.JoinedBankAccountInfo;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.record.CompressionType;
 import org.apache.kafka.common.serialization.UUIDDeserializer;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
+import org.springframework.kafka.listener.ConsumerProperties;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
@@ -28,17 +30,18 @@ public class KafkaConfig {
     private KafkaProperties kafkaProperties;
 
     @Bean
-    public ConsumerFactory consumerFactory() {
+    public ConsumerFactory<?, ?> consumerFactory() {
         Map<String, Object> config = new HashMap<>(kafkaProperties.buildConsumerProperties());
         JsonDeserializer<BankAccount> jsonDeserializer = new JsonDeserializer<>(BankAccount.class);
         jsonDeserializer.addTrustedPackages(BankAccount.class.getPackage().getName());
-        return new DefaultKafkaConsumerFactory(config, new UUIDDeserializer(), jsonDeserializer);
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, "kafka-cassandra-group");
+        return new DefaultKafkaConsumerFactory<>(config, new UUIDDeserializer(), jsonDeserializer);
     }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<UUID, Object> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory listenerContainerFactory =
-                new ConcurrentKafkaListenerContainerFactory();
+                new ConcurrentKafkaListenerContainerFactory<>();
         listenerContainerFactory.setConsumerFactory(consumerFactory());
         return listenerContainerFactory;
     }

@@ -1,0 +1,49 @@
+server:
+  port: 9003
+spring:
+  profiles:
+    active: kafka-on-local, kafka-streams
+  data:
+    cassandra:
+      contact-points: localhost
+      keyspace-name: bankkeyspace
+      schema-action: create_if_not_exists
+      port: 9042
+  cloud:
+    stream:
+      kafka:
+        streams:
+          binder:
+            application-id: kafka-cassandra-consumer
+            consumer-properties:
+              groud-id: kafka-cassandra-group
+      bindings:
+        bank-accounts-input:
+          destination: bank-accounts
+        addresses-input:
+          destination: addresses
+        bank-account-infos-output:
+          destination: bank-account-infos
+        bank-account-infos-input:
+          destination: bank-account-infos
+
+kafka:
+  topics:
+    bank-accounts-topic: bank-accounts
+    addresses-topic: addresses
+    bank-account-infos-topic: bank-account-infos
+
+---
+spring:
+  profiles: kafka-on-local
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: kafka-cassandra-group
+#---
+#spring:
+#  profiles: kafka-on-macbook
+#  kafka:
+#    bootstrap-servers: 192.168.0.103:9092
+#    consumer:
+#      group-id: bank-accounts-group
