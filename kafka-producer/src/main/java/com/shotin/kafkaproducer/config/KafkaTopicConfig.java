@@ -35,7 +35,7 @@ public class KafkaTopicConfig {
         configs.put(TopicConfig.RETENTION_BYTES_CONFIG, String.valueOf(1024*1024*100));
         configs.put(TopicConfig.RETENTION_MS_CONFIG, String.valueOf(1000*60));
 
-        return new NewTopic(bankAccountsTopic, 2, (short) 1)
+        return new NewTopic(bankAccountsTopic, 4, (short) 1)
                 .configs(configs);
     }
 }

@@ -1,5 +1,6 @@
 package com.shotin.usercassandrarequest.model;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
@@ -7,6 +8,9 @@ import java.util.UUID;
 
 import static com.shotin.usercassandrarequest.model.BankAccountEntity.BANK_ACCOUNT_TYPE;
 
+@JsonPropertyOrder({
+    "uuid", "lastName", "firstName", "patronymic", "accountNumber", "accountType"
+})
 @UserDefinedType(BANK_ACCOUNT_TYPE)
 public class BankAccountEntity {
     public static final String BANK_ACCOUNT_TYPE = "bank_account_type";

@@ -6,9 +6,12 @@ spring:
   cloud:
     stream:
       kafka:
-        binder:
-          consumer-properties:
-            group-id: address-generator-group
+        streams:
+          binder:
+            application-id: address-generator
+            bank-accounts-input:
+              consumer:
+                group-id: address-generator-group
       bindings:
         bank-accounts-input:
           destination: bank-accounts

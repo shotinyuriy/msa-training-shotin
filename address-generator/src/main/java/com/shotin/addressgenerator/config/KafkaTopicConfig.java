@@ -36,7 +36,7 @@ public class KafkaTopicConfig {
         configs.put(TopicConfig.RETENTION_MS_CONFIG, String.valueOf(1000*60));
         configs.put(TopicConfig.SEGMENT_BYTES_CONFIG, String.valueOf(1024*1024*10));
 
-        return new NewTopic(addressesTopic, 2, (short) 1)
+        return new NewTopic(addressesTopic, 4, (short) 1)
                 .configs(configs);
     }
 }

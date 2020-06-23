@@ -14,9 +14,14 @@ spring:
       kafka:
         streams:
           binder:
-            application-id: kafka-cassandra-consumer
+            application-id: kafka-consumer
             consumer-properties:
-              groud-id: kafka-cassandra-group
+              bank-accounts-input:
+                consumer:
+                  groud-id: kafka-consumer-group
+              addresses-input:
+                consumer:
+                  groud-id: kafka-consumer-group
       bindings:
         bank-accounts-input:
           destination: bank-accounts

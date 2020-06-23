@@ -5,13 +5,17 @@ spring:
     active: kafka-on-local
   cloud:
     stream:
-      application-id: kafka-redis-consumer
+      application-id: kafka-consumer
       kafka:
         streams:
           binder:
-            application-id: kafka-redis-consumer
-            consumer-properties:
-              group-id: kafka-redis-group
+            application-id: kafka-consumer
+            bank-accounts-input:
+              consumer:
+                group-id: kafka-consumer-group
+            addresses-input:
+              consumer:
+                group-id: kafka-consumer-group
       bindings:
         bank-accounts-input:
           destination: bank-accounts
