@@ -15,13 +15,12 @@ spring:
         streams:
           binder:
             application-id: kafka-consumer
-            consumer-properties:
-              bank-accounts-input:
-                consumer:
-                  groud-id: kafka-consumer-group
-              addresses-input:
-                consumer:
-                  groud-id: kafka-consumer-group
+            bank-accounts-input:
+              consumer:
+                groud-id: kafka-consumer-group
+            addresses-input:
+              consumer:
+                groud-id: kafka-consumer-group
       bindings:
         bank-accounts-input:
           destination: bank-accounts

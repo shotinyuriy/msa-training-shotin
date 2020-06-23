@@ -1,7 +1,6 @@
 package com.shotin.usercassandrarequest.model;
 
-import com.datastax.driver.core.DataType;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+//import com.datastax.driver.core.DataType;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
@@ -18,10 +17,10 @@ public class BankAccountInfo {
     @PrimaryKey
     private UUID uuid;
 
-    @CassandraType(type= DataType.Name.UDT, userTypeName = BankAccountEntity.BANK_ACCOUNT_TYPE)
+    @CassandraType(type= CassandraType.Name.UDT, userTypeName = BankAccountEntity.BANK_ACCOUNT_TYPE)
     private BankAccountEntity bank_account;
 
-    @CassandraType(type= DataType.Name.UDT, userTypeName = AddressEntity.ADDRESS_TYPE)
+    @CassandraType(type= CassandraType.Name.UDT, userTypeName = AddressEntity.ADDRESS_TYPE)
     private AddressEntity address;
 
     public BankAccountInfo(UUID uuid, BankAccountEntity bank_account, AddressEntity address) {

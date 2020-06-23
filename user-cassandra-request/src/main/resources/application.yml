@@ -1,6 +1,8 @@
 server:
-  port: 9004
+  port: 10004
 spring:
   data:
     cassandra:
       keyspace-name: bankkeyspace
+      contact-points: localhost
+      local-datacenter: datacenter1

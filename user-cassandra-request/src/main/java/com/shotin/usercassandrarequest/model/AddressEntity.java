@@ -1,6 +1,6 @@
 package com.shotin.usercassandrarequest.model;
 
-import com.datastax.driver.core.DataType;
+//import com.datastax.driver.core.DataType;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
@@ -11,13 +11,13 @@ public class AddressEntity {
 
     public static final String ADDRESS_TYPE = "address_type";
 
-    @CassandraType(type = DataType.Name.TEXT)
+    @CassandraType(type = CassandraType.Name.TEXT)
     private String street;
 
-    @CassandraType(type = DataType.Name.TEXT)
+    @CassandraType(type = CassandraType.Name.TEXT)
     private String city;
 
-    @CassandraType(type = DataType.Name.TEXT)
+    @CassandraType(type = CassandraType.Name.TEXT)
     private String state;
 
     public String getStreet() {
