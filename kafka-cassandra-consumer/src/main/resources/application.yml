@@ -17,10 +17,8 @@ spring:
             application-id: kafka-consumer
             bank-accounts-input:
               consumer:
-                groud-id: kafka-consumer-group
             addresses-input:
               consumer:
-                groud-id: kafka-consumer-group
       bindings:
         bank-accounts-input:
           destination: bank-accounts

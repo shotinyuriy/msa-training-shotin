@@ -1,6 +1,7 @@
 package com.shotin.kafkaconsumer.config;
 
 import com.shotin.bankaccount.model.kafka.BankAccount;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.UUIDDeserializer;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
