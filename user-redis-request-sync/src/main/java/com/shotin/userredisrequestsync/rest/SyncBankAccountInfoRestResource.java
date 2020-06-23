@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1-sync/bank-account-infos")
@@ -23,30 +23,25 @@ public class SyncBankAccountInfoRestResource {
 
     @GetMapping("/keys")
     public ResponseEntity<BankAccountInfoKeys> bankAccountInfoKeys() {
-        final AtomicReference<Throwable> exception = new AtomicReference<>();
-        BankAccountInfoKeys keys = bankAccountInfoService.findAllKeys()
-                .collect(ArrayList<String>::new, ArrayList::add)
-                .map(BankAccountInfoKeys::new)
-                .doOnError(ex -> exception.set(ex))
-                .block();
-
-        if (exception.get() != null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        } else {
+        try {
+            BankAccountInfoKeys keys = new BankAccountInfoKeys(
+                    new ArrayList<>(bankAccountInfoService.findAllKeys()));
             return ResponseEntity.ok(keys);
+        } catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GetMapping("/{uuid}")
     public ResponseEntity<BankAccountInfoEntity> getBankAccountInfoById(@PathVariable String uuid) {
-        final AtomicReference<Throwable> exception = new AtomicReference<>();
-        BankAccountInfoEntity bankAccountInfo = bankAccountInfoService.findBankAccountInfoById(uuid)
-                .doOnError(ex -> exception.set(ex))
-                .block();
-        if (exception.get() != null) {
+        try {
+            Optional<BankAccountInfoEntity> bankAccountInfo = bankAccountInfoService.findBankAccountInfoById(uuid);
+            return bankAccountInfo
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        } else {
-            return ResponseEntity.ok(bankAccountInfo);
         }
     }
 }

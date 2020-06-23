@@ -1,26 +1,25 @@
 package com.shotin.userredisrequestsync.service;
 
 import com.shotin.consumer.redis.model.BankAccountInfoEntity;
-import com.shotin.consumer.redis.repository.ReactiveBankAccountInfoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
-import java.util.UUID;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class BankAccountInfoService {
 
-    private final ReactiveBankAccountInfoRepository reactiveBankAccountInfoRepository;
+    private final com.shotin.userredisrequestsync.repository.BankAccountInfoRepository bankAccountInfoRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    public Flux<String> findAllKeys() {
-        return reactiveBankAccountInfoRepository.findAllKeys()
-                .map(uuid -> uuid.toString());
+    public Set<String> findAllKeys() {
+        return redisTemplate.opsForSet().members(BankAccountInfoEntity.BANK_ACCOUNT_INFO_KEY);
     }
 
-    public Mono<BankAccountInfoEntity> findBankAccountInfoById(String uuid) {
-        return reactiveBankAccountInfoRepository.findById(UUID.fromString(uuid));
+    public Optional<BankAccountInfoEntity> findBankAccountInfoById(String uuid) {
+        return bankAccountInfoRepository.findById(uuid);
     }
 }

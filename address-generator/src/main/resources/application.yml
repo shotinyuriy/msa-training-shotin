@@ -5,6 +5,10 @@ spring:
     active: local-random, kafka-on-local
   cloud:
     stream:
+      kafka:
+        binder:
+          consumer-properties:
+            group-id: address-generator-group
       bindings:
         bank-accounts-input:
           destination: bank-accounts
