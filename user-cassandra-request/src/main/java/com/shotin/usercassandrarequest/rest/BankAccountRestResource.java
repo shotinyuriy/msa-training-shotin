@@ -3,6 +3,7 @@ package com.shotin.usercassandrarequest.rest;
 import com.shotin.usercassandrarequest.model.AddressEntity;
 import com.shotin.usercassandrarequest.model.BankAccountInfo;
 import com.shotin.usercassandrarequest.repository.BankAccountRepository;
+import com.shotin.usercassandrarequest.rest.model.BankAccountInfoKeys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class BankAccountRestResource {
                 .collect(Collectors.toSet());
 
 
-        return ResponseEntity.ok(keys);
+        return ResponseEntity.ok(new BankAccountInfoKeys(keys));
     }
 
     @GetMapping("/search")

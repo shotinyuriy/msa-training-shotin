@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.cassandra.CqlSessionBuilderCustomi
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.AbstractCassandraConfiguration;
-//import org.springframework.data.cassandra.config.CassandraClusterFactoryBean;
 import org.springframework.data.cassandra.config.SchemaAction;
 import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecification;
 import org.springframework.data.cassandra.core.cql.keyspace.DataCenterReplication;
@@ -31,12 +30,12 @@ import java.util.List;
 @EnableCassandraRepositories(basePackageClasses = {BankAccountRepository.class})
 public class CassandraConfigWithAbstract extends AbstractCassandraConfiguration {
 
-    @Value("${spring.data.cassandra.keyspace-name}")
-    private String keyspaceName;
+    @Autowired
+    private CassandraProperties cassandraProperties;
 
     @Override
     protected String getKeyspaceName() {
-        return keyspaceName;
+        return cassandraProperties.getKeyspaceName();
     }
 
     @Override
@@ -44,20 +43,16 @@ public class CassandraConfigWithAbstract extends AbstractCassandraConfiguration 
         return SchemaAction.CREATE_IF_NOT_EXISTS;
     }
 
-//    @Override
-//    public List<String> getStartupScripts() {
-//        return loadStartUpScriptsFromResource("cassandra-startup-script.sql");
-//    }
+    @Override
+    protected String getLocalDataCenter() {
+        return cassandraProperties.getLocalDatacenter();
+    }
 
-//    @Bean
-//    public CassandraClusterFactoryBean cluster(@Autowired CassandraProperties cassandraProperties) {
-//        CassandraClusterFactoryBean cluster = new CassandraClusterFactoryBean();
-//        cluster.setContactPoints(cassandraProperties.getContactPoints().get(0));
-//        cluster.setPort(cassandraProperties.getPort());
-//        cluster.setKeyspaceCreations(Collections.singletonList(createKeyspaceSpecification()));
-//        return cluster;
-//    }
-
+    /**
+     * Use this for custom username and password to connect to Cassandra
+     * @param properties
+     * @return
+     */
     @Bean
     public CqlSessionBuilderCustomizer authCustomizer(final CassandraProperties properties) {
         return (builder) -> builder
@@ -66,18 +61,6 @@ public class CassandraConfigWithAbstract extends AbstractCassandraConfiguration 
                 .withAuthCredentials(properties.getUsername(), properties.getPassword());
     }
 
-//    @Override
-//    protected KeyspacePopulator keyspacePopulator() {
-//        return new KeyspacePopulator() {
-//            @Override
-//            public void populate(CqlSession session) throws ScriptException {
-//                CqlIdentifier keyspaceName = CqlIdentifier.fromInternal(getKeyspaceName());
-//                DefaultCreateKeyspace dcks = new DefaultCreateKeyspace(keyspaceName);
-//                session.execute(dcks.asCql());
-//            }
-//        };
-//    }
-
     @Override
     protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
         return Collections.singletonList(createKeyspaceSpecification());
@@ -85,17 +68,26 @@ public class CassandraConfigWithAbstract extends AbstractCassandraConfiguration 
 
     protected CreateKeyspaceSpecification createKeyspaceSpecification() {
         CreateKeyspaceSpecification ckss = CreateKeyspaceSpecification.createKeyspace(getKeyspaceName());
-        DataCenterReplication dcr = DataCenterReplication.of("datacenter1", 3L);
+        DataCenterReplication dcr = DataCenterReplication.of(cassandraProperties.getLocalDatacenter(), 3L);
         ckss.ifNotExists(true).withNetworkReplication(dcr);
         return ckss;
     }
 
+
+
+
+
+    /**
+     * CURRENTLY THIS IS NOT USED
+     * @param resourceName
+     * @return
+     */
     public static List<String> loadStartUpScriptsFromResource(String resourceName) {
         List<String> scripts = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
-        try(InputStream inputStream = CassandraConfigWithAbstract.class.getClassLoader().getResourceAsStream(resourceName);
-            InputStreamReader reader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(reader)) {
+        try (InputStream inputStream = CassandraConfigWithAbstract.class.getClassLoader().getResourceAsStream(resourceName);
+             InputStreamReader reader = new InputStreamReader(inputStream);
+             BufferedReader bufferedReader = new BufferedReader(reader)) {
 
             bufferedReader.lines()
                     .forEach(line -> sb.append(line).append("\n"));
