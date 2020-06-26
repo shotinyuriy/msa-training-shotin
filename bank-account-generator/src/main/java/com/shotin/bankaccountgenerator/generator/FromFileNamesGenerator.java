@@ -1,5 +1,9 @@
 package com.shotin.bankaccountgenerator.generator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.net.URL;
@@ -13,6 +17,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class FromFileNamesGenerator implements NamesGenerator {
+
+    Logger LOG = LoggerFactory.getLogger(FromFileNamesGenerator.class);
 
     private String firstNamesFilePath;
     private String lastNamesFilePath;
@@ -59,13 +65,22 @@ public class FromFileNamesGenerator implements NamesGenerator {
         if (fileName == null) {
             return new ArrayList<>();
         }
+
         if (fileName.toLowerCase().startsWith("classpath")) {
-            fileName = fileName.replaceAll("^classpath\\*?:", "");
-            URL url = getClass().getClassLoader().getResource(fileName);
-            if (url == null) {
-                throw new RuntimeException("Failed to load names from classpath file: "+fileName+" file does not exist");
+
+            ClassPathResource classPathResource = new ClassPathResource(fileName);
+            try {
+                fileName = classPathResource.getURL().getPath();
+                LOG.info("CLASSPATH RESOURCE URL="+fileName);
+                try (InputStream inputStream = classPathResource.getInputStream();
+                    InputStreamReader reader = new InputStreamReader(inputStream);
+                    BufferedReader bufferedReader = new BufferedReader(reader)) {
+                    LOG.info("READING FROM CLASSPATH RESOURCE URL="+fileName);
+                    return bufferedReader.lines().collect(Collectors.toList());
+                }
+            } catch (IOException e) {
+                LOG.error("FAILED TO LOAD CLASSPATH RESOURCE FILE="+fileName);
             }
-            fileName = url.getPath();
         }
 
         try {
@@ -73,20 +88,18 @@ public class FromFileNamesGenerator implements NamesGenerator {
                 fileName = fileName.replaceAll("^/", "");
             }
             Path filePath;
-            try {
                 filePath = Paths.get(fileName);
-            } catch (Exception e) {
-                filePath = Paths.get(fileName);
-            }
-
-            return Files.lines(filePath, StandardCharsets.UTF_8)
-                    .map(String::trim)
-                    .filter(s -> !s.isEmpty())
-                    .collect(Collectors.toList());
+                return Files.lines(filePath, StandardCharsets.UTF_8)
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .collect(Collectors.toList());
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Failed to load names from file "+fileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load names from file "+fileName, e);
+        } catch (Exception e) {
+            LOG.error("FAILED TO READ FILE="+fileName);
+            return new ArrayList<>();
         }
     }
 
