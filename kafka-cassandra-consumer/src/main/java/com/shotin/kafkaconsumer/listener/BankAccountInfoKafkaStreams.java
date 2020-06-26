@@ -37,23 +37,21 @@ public class BankAccountInfoKafkaStreams {
     private final BankAccountInfoConverter bankAccountInfoConverter;
 
     @Bean
-    public Topology bankAccountInfoJoiner(
-            KafkaTopics kafkaTopics, StreamsBuilder streamsBuilder) {
+    public Topology bankAccountInfoJoiner1(KafkaTopics kafkaTopics, StreamsBuilder streamsBuilder) {
 
         try (JsonSerde<BankAccount> bankAccountSerde = new JsonSerde<>(BankAccount.class, new ObjectMapper());
              JsonSerde<Address> addressSerde = new JsonSerde<>(Address.class, new ObjectMapper())) {
-            KTable<UUID, BankAccount> bankAccounts = streamsBuilder
-                    .table(kafkaTopics.getBankAccountsTopic(),
-                            Consumed.with(Serdes.UUID(), bankAccountSerde));
 
-            KTable<UUID, Address> addresses = streamsBuilder
-                    .table(kafkaTopics.getAddressesTopic(),
-                            Consumed.with(Serdes.UUID(), addressSerde));
+            KTable<UUID, BankAccount> bankAccounts
+                    = streamsBuilder.table(kafkaTopics.getBankAccountsTopic(), Consumed.with(Serdes.UUID(), bankAccountSerde));
+
+            KTable<UUID, Address> addresses
+                    = streamsBuilder.table(kafkaTopics.getAddressesTopic(), Consumed.with(Serdes.UUID(), addressSerde));
 
             final Set<UUID> processedUuids = new HashSet<>();
 
-            bankAccounts
-                    .join(addresses, (bankAccount, address) -> {
+            addresses
+                    .join(bankAccounts, (address, bankAccount) -> {
                         log.info("JOINING BANK_ACCOUNT={}, ADDRESS={}", bankAccount.getUuid(), address.getUuid());
                         return new JoinedBankAccountInfo(bankAccount.getUuid(), bankAccount, address);
                     })
@@ -64,7 +62,7 @@ public class BankAccountInfoKafkaStreams {
                             log.warn("DUPLICATED KEY UUID={} PROCESSED SET SIZE={}", key, processedUuids.size());
                             processedUuids.remove(key);
                         }
-                        return !duplicated;
+                        return !duplicated && value != null;
                     })
                     .peek((key, value) -> processedUuids.add(key))
                     .peek((key, value) -> log.info("RECEIVED MESSAGE UUID={}", key))
@@ -73,7 +71,7 @@ public class BankAccountInfoKafkaStreams {
                             bankAccountRepository.save(bankAccountInfoConverter.from(value));
                             log.info("SAVED MESSAGE TO CASSANDRA. UUID={}", key);
                         } catch (Exception e) {
-                            log.error("FAILED SAVING MESSAGE TO CASSANDRA. UUID={}, EXCEPTION={}", key, e.toString());
+                            log.error("FAILED SAVING MESSAGE TO CASSANDRA. UUID="+key+", EXCEPTION=", e);
                         }
                     }));
 

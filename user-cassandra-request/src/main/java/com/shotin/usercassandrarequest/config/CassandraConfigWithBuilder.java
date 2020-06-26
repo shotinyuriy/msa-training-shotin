@@ -7,11 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 
-@Configuration
-@EnableCassandraRepositories(basePackageClasses = {BankAccountRepository.class})
+//@Configuration
+//@EnableCassandraRepositories(basePackageClasses = {BankAccountRepository.class})
 public class CassandraConfigWithBuilder {
 
-    @Bean
+//    @Bean
     public CqlSessionBuilderCustomizer authCustomizer(final CassandraProperties properties) {
         return (builder) -> builder
                 .withKeyspace(properties.getKeyspaceName())

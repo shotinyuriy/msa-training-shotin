@@ -22,6 +22,9 @@ public class KafkaTopicConfig {
     @Value("${addresses.kafka.topic:addresses}")
     private String addressesTopic;
 
+    @Value("${bank-accounts.kafka.topic:bank-accounts}")
+    private String bankAccountsTopic;
+
     @Bean
     public KafkaAdmin kafkaAdmin() {
         Map<String, Object> configs = new HashMap<>();
@@ -37,6 +40,17 @@ public class KafkaTopicConfig {
         configs.put(TopicConfig.SEGMENT_BYTES_CONFIG, String.valueOf(1024*1024*10));
 
         return new NewTopic(addressesTopic, 4, (short) 1)
+                .configs(configs);
+    }
+
+    @Bean
+    public NewTopic bankAccountsTopic() {
+        Map<String, String> configs = new HashMap<>();
+        configs.put(TopicConfig.RETENTION_BYTES_CONFIG, String.valueOf(1024*1024*100));
+        configs.put(TopicConfig.RETENTION_MS_CONFIG, String.valueOf(1000*60));
+        configs.put(TopicConfig.SEGMENT_BYTES_CONFIG, String.valueOf(1024*1024*10));
+
+        return new NewTopic(bankAccountsTopic, 4, (short) 1)
                 .configs(configs);
     }
 }

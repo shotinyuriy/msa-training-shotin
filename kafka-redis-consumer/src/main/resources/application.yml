@@ -34,5 +34,6 @@ spring:
   profiles: kafka-on-local
   kafka:
     bootstrap-servers: localhost:9092
+    auto-create-topics-enable: false
     consumer:
       group-id: kafka-redis-group
