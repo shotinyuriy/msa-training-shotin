@@ -6,3 +6,4 @@
 - kafka-redis-consumer: 9006
 - user-redis-request: 9007
 - user-redis-request-sync: 9008
+- hello-server: 9009
