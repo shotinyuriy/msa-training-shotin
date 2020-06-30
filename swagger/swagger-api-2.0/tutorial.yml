@@ -1,12 +1,15 @@
 swagger: '2.0'
 info:
   version: 1.0.0
-  title: Simple Example API
-  description: An API to illustrate Swagger
-paths:
-  /list:
-    get:
-      description: Returns a list of stuff
-      responses:
-        200:
-          description: Successful response
+  title: Simple Artist API
+  description: A simple API to understand the Swagger Specification in greater detail
+schemes:
+- https
+host: example.io
+basePath: /v1
+securityDefinitions:
+  UserSecurity:
+    type: basic
+security:
+  - UserSecurity: []
+paths: {}
