@@ -39,6 +39,25 @@ public class App {
                 System.out.println("GREETING: " + greetingReference.get());
             }
         });
+
+        helloClient.helloAsync("John 2", "Johnson 2", new StreamObserver<HelloResponse>() {
+
+            @Override
+            public void onNext(HelloResponse value) {
+                greetingReference.set(value.getGreeting());
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                System.err.println("ERROR: "+t);
+            }
+
+            @Override
+            public void onCompleted() {
+                System.out.println("GREETING: " + greetingReference.get());
+            }
+        });
+
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
