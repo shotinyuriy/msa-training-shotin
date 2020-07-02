@@ -15,5 +15,11 @@ components:
       scheme: basic
 security:
   - BasicAuth: []
-
-paths: {}
+# ----- Added lines --------------------
+--
+paths:
+  /artists:
+    get:
+      description: Returns a list of artists
+# ----- /Added lines --------------------
+--
