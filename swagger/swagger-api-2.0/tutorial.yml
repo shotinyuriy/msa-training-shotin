@@ -17,12 +17,22 @@ securityDefinitions:
 security:
   - UserSecurity: []
 
-
 paths:
   /artists:
     get:
       description: Returns a list of artists
 # ----- Added lines --------------------
+      parameters:
+        - name: limit
+          in: query
+          type: integer
+          descritption: Limits the number of items on a page
+        - name: offset
+          in: query
+          type: integer
+          description: Specifies the page number of the artists to be displayed
+# ----- /Added lines --------------------
+      
       responses:
         200:
           desription: Successfullt returned a list of artists
@@ -49,4 +59,3 @@ paths:
             properties:
               message:
                 type: string
-# ----- /Added lines --------------------
