@@ -35,20 +35,9 @@ paths:
         200:
           desription: Successfullt returned a list of artists
           schema:
-            type: array
-            items:
-              type: object
-              required:
-                - username
-              properties:
-                artist_name:
-                  type: string
-                artist_genre:
-                  type: string
-                albums_recorded:
-                  type: integer
-                username:
-                  type: string
+            # ----- Added line --------------------
+            $ref: '#/definitions/Artist'
+            # ----- /Added line --------------------
         400:
           description: Invalid request
           schema:
@@ -64,18 +53,9 @@ paths:
           in: body
           description: Creates a new artist in our database
           schema:
-            type: object
-            required:
-              - username
-            properties:
-              artist_name:
-                type: string
-              artist_genre:
-                type: string
-              albums_recorded:
-                type: integer
-              username:
-                type: string
+            # ----- Added line --------------------
+            $ref: '#/definitions/Artist'
+            # ----- /Added line --------------------
 
       responses:
         200:
@@ -88,7 +68,7 @@ paths:
             properties:
               message:
                 type: string
-# ----- Added lines --------------------
+
   /artists/{username}:
     get:
       description: Obtain information about an artist from their username
@@ -118,4 +98,20 @@ paths:
             properties:
               message:
                 type: string
+
+# ----- Added lines --------------------
+definitions:
+  Artist:
+    type: object
+    required:
+      - username:
+    properties:
+      artist_name:
+        type: string
+      artist_genre:
+        type: string
+      albums_recorded:
+        type: integer
+      username:
+        type: string
 # ----- /Added lines --------------------
