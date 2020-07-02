@@ -22,29 +22,20 @@ paths:
     get:
       description: Returns a list of artists
       parameters:
-        - name: limit
-          in: query
-          type: integer
-          descritption: Limits the number of items on a page
-        - name: offset
-          in: query
-          type: integer
-          description: Specifies the page number of the artists to be displayed
+        # ----- Added lines --------------------
+        - $ref: '#/parameters/PageLimit'
+        - $ref: '#/parameters/PageNumber'
+        # ----- /Added lines --------------------
 
       responses:
         200:
           desription: Successfullt returned a list of artists
           schema:
-            # ----- Added line --------------------
             $ref: '#/definitions/Artist'
-            # ----- /Added line --------------------
         400:
-          description: Invalid request
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
+          # ----- Added line --------------------
+          $ref: '#/responses/400Error'
+          # ----- /Added line -------------------
 
     post:
       description: Lets a user post a new artist
@@ -53,21 +44,16 @@ paths:
           in: body
           description: Creates a new artist in our database
           schema:
-            # ----- Added line --------------------
             $ref: '#/definitions/Artist'
-            # ----- /Added line --------------------
 
       responses:
         200:
           description: Successfully created a new artist
 
         400:
-          description: Invalid request
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
+          # ----- Added line --------------------
+          $ref: '#/responses/400Error'
+          # ----- /Added line --------------------
 
   /artists/{username}:
     get:
@@ -92,14 +78,10 @@ paths:
                 type: integer
 
         400:
-          description: Invalid request
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
+          # ----- Added line --------------------
+          $ref: '#/responses/400Error'
+          # ----- /Added line -------------------
 
-# ----- Added lines --------------------
 definitions:
   Artist:
     type: object
@@ -114,4 +96,24 @@ definitions:
         type: integer
       username:
         type: string
+# ----- Added lines ---------------------
+parameters:
+  PageLimit:
+    name: limit
+    in: query
+    type: integer
+    desctiption: Limits the number of items on a page
+  PageNumber:
+    name: offset
+    in: query
+    type: integer
+    description: Specifies the page number of the artists to be displayed
+responses:
+  400Error:
+    description: Invalid request
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
 # ----- /Added lines --------------------
