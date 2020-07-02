@@ -56,7 +56,7 @@ paths:
             properties:
               message:
                 type: string
-# ----- Added lines --------------------
+
     post:
       description: Lets a user post a new artist
       parameters:
@@ -80,6 +80,36 @@ paths:
       responses:
         200:
           description: Successfully created a new artist
+
+        400:
+          description: Invalid request
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+# ----- Added lines --------------------
+  /artists/{username}:
+    get:
+      description: Obtain information about an artist from their username
+      parameters:
+        - name: username
+          in: path
+          type: string
+          required: true
+
+      responses:
+        200:
+          description: Successfully returned an artist
+          schema:
+            type: object
+            properties:
+              artist_name:
+                type: string
+              artist_genre:
+                type: string
+              albums_recorded:
+                type: integer
 
         400:
           description: Invalid request
