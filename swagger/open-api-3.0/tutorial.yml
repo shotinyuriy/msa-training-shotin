@@ -63,7 +63,7 @@ paths:
                 properties:
                   message:
                     type: string
-    # ----- Added lines --------------------
+
     post:
       description: Lets a user post a new artist
       requestBody:
@@ -97,4 +97,41 @@ paths:
                 properties:
                   message:
                     type: string
-    # ----- /Added lines --------------------
+
+
+  # ----- Added lines --------------------
+  /artists/{username}:
+    get:
+      description: Obtain information about an artist from their unique username
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Successfully returned an artist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  artist_name:
+                    type: string
+                  artist_genre:
+                    type: string
+                  albums_recorded:
+                    type: integer
+
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  # ----- /Added lines --------------------
