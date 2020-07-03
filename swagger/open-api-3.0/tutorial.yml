@@ -8,11 +8,6 @@ servers:
   - url: https://example.io/v1
 
 # Basic authentication
-components:
-  securitySchemes:
-    BasicAuth:
-      type: http
-      scheme: basic
 security:
   - BasicAuth: []
 
@@ -41,18 +36,7 @@ paths:
               schema:
                 type: array
               items:
-                type: object
-                required:
-                  - username
-                properties:
-                  artist_name:
-                    type: string
-                  artist_genre:
-                    type: string
-                  albums_recorded:
-                    type: integer
-                  username:
-                    type: string
+                $ref: '#/components/schemas/Artist'
 
         '400':
           description: Invalid request
@@ -71,18 +55,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - username
-              properties:
-                artist_name:
-                  type: string
-                artist_genre:
-                  type: string
-                albums_recorded:
-                  type: integer
-                username:
-                  type: string
+              $ref: '#/components/schemas/Artist'
 
       responses:
         '200':
@@ -98,8 +71,6 @@ paths:
                   message:
                     type: string
 
-
-  # ----- Added lines --------------------
   /artists/{username}:
     get:
       description: Obtain information about an artist from their unique username
@@ -134,4 +105,25 @@ paths:
                 properties:
                   message:
                     type: string
-  # ----- /Added lines --------------------
+# ----- Added lines --------------------
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
+  schemas:
+    Artist:
+      type: object
+      required:
+        - username
+      properties:
+        artist_name:
+          type: string
+        artist_genre:
+          type: string
+        albums_recorded:
+          type: integer
+        username:
+          type: string
+# ----- /Added lines --------------------
