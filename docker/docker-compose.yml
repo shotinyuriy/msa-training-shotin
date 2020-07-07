@@ -37,97 +37,114 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-#
-#  broker-two:
-#    labels:
-#      - "msa-training"
-#    image: confluentinc/cp-kafka:5.5.0
-#    hostname: broker-two
-#    container_name: broker-two
-#    depends_on:
-#      - zookeeper
-#    ports:
-#      - "29093:29093"
-#      - "9093:9093"
-#    volumes:
-#      - 'kafka_data:/kafka'
-#    environment:
-#      KAFKA_BROKER_ID: 2
-#      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-two:29093,PLAINTEXT_HOST://localhost:9093
-#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-#      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-#      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-#      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-#
-#  broker-three:
-#    labels:
-#      - "msa-training"
-#    image: confluentinc/cp-kafka:5.5.0
-#    hostname: broker-three
-#    container_name: broker-three
-#    depends_on:
-#      - zookeeper
-#    ports:
-#      - "29094:29094"
-#      - "9094:9094"
-#    volumes:
-#      - 'kafka_data:/kafka'
-#    environment:
-#      KAFKA_BROKER_ID: 3
-#      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-three:29094,PLAINTEXT_HOST://localhost:9094
-#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-#      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-#      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-#      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
 
-  accounts-cassandra:
+  broker-two:
     labels:
       - "msa-training"
-    image: 'cassandra:3.11'
-    hostname: accounts-cassandra
-    container_name: accounts-cassandra
+    image: confluentinc/cp-kafka:5.5.0
+    hostname: broker-two
+    container_name: broker-two
+    depends_on:
+      - zookeeper
     ports:
-      - '7000:7000'
-      - '9042:9042'
+      - "29093:29093"
+      - "9093:9093"
     volumes:
-      - 'cassandra_data:/bitnami'
+      - 'kafka_data:/kafka'
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-two:29093,PLAINTEXT_HOST://localhost:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+  broker-three:
+    labels:
+      - "msa-training"
+    image: confluentinc/cp-kafka:5.5.0
+    hostname: broker-three
+    container_name: broker-three
+    depends_on:
+      - zookeeper
+    ports:
+      - "29094:29094"
+      - "9094:9094"
+    volumes:
+      - 'kafka_data:/kafka'
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-three:29094,PLAINTEXT_HOST://localhost:9094
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+#  accounts-cassandra:
+#    labels:
+#      - "msa-training"
+#    image: 'cassandra:3.11'
+#    hostname: accounts-cassandra
+#    container_name: accounts-cassandra
+#    ports:
+#      - '7000:7000'
+#      - '9042:9042'
+#    volumes:
+#      - 'cassandra_data:/bitnami'
+#   -- optional
 #    environment:
 #      - CASSANDRA_SEEDS=cassandra
 #      - CASSANDRA_PASSWORD_SEEDER=yes
 #      - CASSANDRA_PASSWORD=cassandra
-  accounts-redis:
-    labels:
-      - "msa-training"
-    image: 'redis:6.0.5'
-    hostname: accounts-redis
-    container_name: accounts-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - 'redis_data:/redis'
 
-  redis-commander:
-    container_name: redis-commander
-    hostname: redis-commander
-    image: rediscommander/redis-commander:latest
-    restart: always
-    environment:
-      - REDIS_HOSTS=local:accounts-redis:6379
-    ports:
-      - "8081:8081"
+#  accounts-redis:
+#    labels:
+#      - "msa-training"
+#    image: 'redis:6.0.5'
+#    hostname: accounts-redis
+#    container_name: accounts-redis
+#    ports:
+#      - "6379:6379"
+#    volumes:
+#      - 'redis_data:/redis'
+#
+#  redis-commander:
+#    container_name: redis-commander
+#    hostname: redis-commander
+#    image: rediscommander/redis-commander:latest
+#    restart: always
+#    environment:
+#      - REDIS_HOSTS=local:accounts-redis:6379
+#    ports:
+#      - "8081:8081"
+#    volumes:
+#      - 'redis_data:/redis'
+
+  tarantool:
+    container_name: accounts-tarantool
+    hostname: accounts-tarantool
+    image: tarantool/tarantool
     volumes:
-      - 'redis_data:/redis'
+      - 'tarantool_data:/tarantool'
+    ports:
+      - "3301:3301"
 
 volumes:
-  cassandra_data:
-    driver: local
+#  cassandra_data:
+#    driver: local
   kafka_data:
     driver: local
-  redis_data:
-    driver: local
+#  redis_data:
+#    driver: local
   zookeeper_data:
     driver: local
+  tarantool_data:
+    driver: local
+
+networks:
+  msanet:
+    driver: bridge
