@@ -6,7 +6,6 @@ import org.springframework.core.io.ClassPathResource;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,13 +19,14 @@ public class FromFileNamesGenerator implements NamesGenerator {
 
     Logger LOG = LoggerFactory.getLogger(FromFileNamesGenerator.class);
 
+    private String CHARSET = StandardCharsets.UTF_8.name();
     private String firstNamesFilePath;
     private String lastNamesFilePath;
     private String patronymicsFilePath;
 
     private List<String> firstNames;
     private List<String> lastNames;
-    private List<String> patronimics;
+    private List<String> patronymics;
 
     private Random random = new Random(System.nanoTime());
 
@@ -58,7 +58,7 @@ public class FromFileNamesGenerator implements NamesGenerator {
     protected void readAllNames() {
         firstNames = readNames(firstNamesFilePath);
         lastNames = readNames(lastNamesFilePath);
-        patronimics = readNames(patronymicsFilePath);
+        patronymics = readNames(patronymicsFilePath);
     }
 
     protected List<String> readNames(String fileName) {
@@ -66,20 +66,20 @@ public class FromFileNamesGenerator implements NamesGenerator {
             return new ArrayList<>();
         }
 
-        if (fileName.toLowerCase().startsWith("classpath")) {
-
+        if (fileName.toLowerCase().startsWith("classpath:")) {
+            fileName = fileName.replaceFirst("classpath:","");
             ClassPathResource classPathResource = new ClassPathResource(fileName);
             try {
                 fileName = classPathResource.getURL().getPath();
                 LOG.info("CLASSPATH RESOURCE URL="+fileName);
                 try (InputStream inputStream = classPathResource.getInputStream();
-                    InputStreamReader reader = new InputStreamReader(inputStream);
+                    InputStreamReader reader = new InputStreamReader(inputStream, CHARSET);
                     BufferedReader bufferedReader = new BufferedReader(reader)) {
                     LOG.info("READING FROM CLASSPATH RESOURCE URL="+fileName);
                     return bufferedReader.lines().collect(Collectors.toList());
                 }
             } catch (IOException e) {
-                LOG.error("FAILED TO LOAD CLASSPATH RESOURCE FILE="+fileName);
+                LOG.error("FAILED TO LOAD CLASSPATH RESOURCE FILE="+fileName+" EXCEPTION="+e);
             }
         }
 
@@ -121,7 +121,7 @@ public class FromFileNamesGenerator implements NamesGenerator {
 
     @Override
     public String getRandomPatronymic() {
-        int index = random.nextInt(patronimics.size());
-        return patronimics.get(index);
+        int index = random.nextInt(patronymics.size());
+        return patronymics.get(index);
     }
 }
