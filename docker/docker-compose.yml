@@ -132,6 +132,9 @@ services:
       - 'tarantool_data:/tarantool'
     ports:
       - "3301:3301"
+    environment:
+      TARANTOOL_USER_NAME: iurii
+      TARANTOOL_USER_PASSWORD: Passw0rd
 
 volumes:
 #  cassandra_data:

@@ -12,8 +12,10 @@ public class TarantoolConfig {
     @Bean
     public TarantoolClient tarantoolClient() {
         TarantoolClientConfig config = new TarantoolClientConfig();
-//        config.username = "";
-//        config.password = "";
+        config.username = "iurii";
+        config.password = "Passw0rd";
+//        config.connectionTimeout = 1;
+        config.initTimeoutMillis = 1000;
         TarantoolClient client = new TarantoolClientImpl("localhost:3301", config);
         return client;
     }
