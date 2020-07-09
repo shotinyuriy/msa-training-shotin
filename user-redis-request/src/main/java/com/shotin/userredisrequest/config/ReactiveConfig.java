@@ -11,12 +11,7 @@ import javax.annotation.PostConstruct;
 public class ReactiveConfig {
 
     @Bean
-    public Scheduler boundedElasticScheduler() {
-        return Schedulers.boundedElastic();
-    }
-
-    @PostConstruct
-    public void setSchedulersFactory() {
-        Schedulers.setFactory(new Schedulers.Factory() {});
+    public Scheduler reactiveScheduler() {
+        return Schedulers.elastic();
     }
 }

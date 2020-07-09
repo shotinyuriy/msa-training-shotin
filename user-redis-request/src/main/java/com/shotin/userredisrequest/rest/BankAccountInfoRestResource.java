@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,7 @@ public class BankAccountInfoRestResource {
         return bankAccountInfoService.findAllKeys()
                 .collect(ArrayList<String>::new, ArrayList::add)
                 .map(BankAccountInfoKeys::new)
-                .subscribeOn(reactiveScheduler);
+                .subscribeOn(Schedulers.elastic());
     }
 
     @GetMapping(value = "/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -44,6 +45,6 @@ public class BankAccountInfoRestResource {
                 .findById(uuid)
                 .flatMap(bankAccountInfoEntity -> Mono.just(ResponseEntity.ok(bankAccountInfoEntity)))
                 .onErrorReturn(ResponseEntity.<BankAccountInfoEntity>notFound().build())
-                .subscribeOn(reactiveScheduler);
+                .subscribeOn(Schedulers.elastic());
     }
 }
