@@ -1,6 +1,7 @@
 package com.shotin.kafka.oracleconsumer.converter;
 
 import com.shotin.bankaccount.model.kafka.BankAccount;
+import com.shotin.kafka.oracleconsumer.model.AccountTypeEntity;
 import com.shotin.kafka.oracleconsumer.model.BankAccountEntity;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,7 @@ public class BankAccountEntityConverter {
         bankAccountEntity.setPatronymic(bankAccount.getPatronymic());
         bankAccountEntity.setAccountNumber(bankAccount.getAccountNumber());
         if (bankAccount.getAccountType() != null) {
-            bankAccountEntity.setAccountType(BankAccountEntity.AccountType.valueOf(bankAccount.getAccountType().name()));
+            bankAccountEntity.setAccountType(AccountTypeEntity.valueOf(bankAccount.getAccountType().name()));
         }
         return bankAccountEntity;
     }

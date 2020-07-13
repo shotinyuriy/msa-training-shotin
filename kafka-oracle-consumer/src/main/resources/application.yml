@@ -4,7 +4,8 @@ spring:
   main:
     banner-mode: off
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:orclcdb
+#    url: jdbc:oracle:thin:@localhost:1521:orclcdb
+    url: jdbc:oracle:thin:@localhost:1521:xe
     username: spring_user
     password: spring_password
     driver-class-oracle: jdbc.driver.OracleDriver

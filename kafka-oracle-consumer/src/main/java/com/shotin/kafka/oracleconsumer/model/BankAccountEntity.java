@@ -1,9 +1,6 @@
 package com.shotin.kafka.oracleconsumer.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -23,8 +20,8 @@ public class BankAccountEntity {
     @Column(name="account_number")
     private long accountNumber;
 
-    @Column(name="account_type")
-    private AccountType accountType;
+    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private AccountTypeEntity accountType;
 
     public UUID getUuid() {
         return uuid;
@@ -66,11 +63,11 @@ public class BankAccountEntity {
         this.accountNumber = accountNumber;
     }
 
-    public AccountType getAccountType() {
+    public AccountTypeEntity getAccountType() {
         return accountType;
     }
 
-    public void setAccountType(AccountType accountType) {
+    public void setAccountType(AccountTypeEntity accountType) {
         this.accountType = accountType;
     }
 
@@ -86,8 +83,5 @@ public class BankAccountEntity {
                 '}';
     }
 
-    public enum AccountType {
-        CHECKING,
-        SAVINGS
-    }
+
 }

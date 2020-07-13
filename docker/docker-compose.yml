@@ -123,6 +123,14 @@ services:
 #      - "8081:8081"
 #    volumes:
 #      - 'redis_data:/redis'
+  oracle:
+    container_name: bank-oracle
+    hostname: bank-oracle
+    image: wnameless/oracle-xe-11g
+    volumes:
+      - 'oracle_data:/oracle'
+    ports:
+      - "1521:1521"
 
   tarantool:
     container_name: accounts-tarantool
@@ -146,6 +154,8 @@ volumes:
   zookeeper_data:
     driver: local
   tarantool_data:
+    driver: local
+  oracle_data:
     driver: local
 
 networks:
