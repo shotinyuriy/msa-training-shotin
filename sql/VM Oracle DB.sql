@@ -1,4 +1,4 @@
-alter session set "_ORACLE_SCRIPT"=true;
+alter session set "_ORACLE_SCRIPT"=true; -- Only for NEW Oracle versions not for 11g
 
 CREATE TABLESPACE tbs_perm_01 DATAFILE 'tbs_perm_01.dbf' SIZE 256M;
 CREATE TEMPORARY TABLESPACE tbs_temp_02 TEMPFILE 'tbs_temp_02.dbf' SIZE 64M;
@@ -22,7 +22,7 @@ ALTER USER spring_user quota 256M on tbs_perm_01; -- ORA-01950
 
 COMMIT;
 
-select username,account_status from dba_users;
+select username,account_status from dba_users WHERE username='SPRING_USER';
 alter user spring_user account unlock;
 COMMIT;
 

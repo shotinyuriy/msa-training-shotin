@@ -8,3 +8,4 @@
 - user-redis-request-sync: 9008
 - hello-server: 9009
 - kafka-oracle-consumer: 9010
+- oracle-tarantool-loader: 9011
