@@ -1,5 +1,6 @@
 package com.shotin.blacklist.loader.config;
 
+import com.shotin.tarantool.repository.BankAccountInfoTarantoolRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.tarantool.TarantoolClient;
@@ -17,5 +18,10 @@ public class TarantoolConfig {
         config.initTimeoutMillis = 1000;
         TarantoolClient client = new TarantoolClientImpl("localhost:3301", config);
         return client;
+    }
+
+    @Bean
+    public BankAccountInfoTarantoolRepository bankAccountInfoTarantoolRepository() {
+        return new BankAccountInfoTarantoolRepository(tarantoolClient());
     }
 }

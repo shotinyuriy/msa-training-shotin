@@ -101,16 +101,16 @@ services:
 #      - CASSANDRA_PASSWORD_SEEDER=yes
 #      - CASSANDRA_PASSWORD=cassandra
 
-  accounts-redis:
-    labels:
-      - "msa-training"
-    image: 'redis:6.0.5'
-    hostname: accounts-redis
-    container_name: accounts-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - 'redis_data:/redis'
+#  accounts-redis:
+#    labels:
+#      - "msa-training"
+#    image: 'redis:6.0.5'
+#    hostname: accounts-redis
+#    container_name: accounts-redis
+#    ports:
+#      - "6379:6379"
+#    volumes:
+#      - 'redis_data:/redis'
 #
 #  redis-commander:
 #    container_name: redis-commander
@@ -149,8 +149,8 @@ volumes:
 #    driver: local
   kafka_data:
     driver: local
-  redis_data:
-    driver: local
+#  redis_data:
+#    driver: local
   zookeeper_data:
     driver: local
   tarantool_data:

@@ -1,9 +1,7 @@
 package com.shotin.tarantool;
 
-import com.shotin.tarantool.repository.FieldType;
-import com.shotin.tarantool.repository.IndexType;
-import com.shotin.tarantool.repository.TarantoolClientSpaceMetaOps;
-import com.shotin.tarantool.repository.TarantoolSpaceMetaOps;
+import com.shotin.tarantool.model.BankAccountInfoTuple;
+import com.shotin.tarantool.repository.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -17,6 +15,7 @@ import org.tarantool.schema.TarantoolSpaceMeta;
 import org.tarantool.schema.TarantoolSpaceNotFoundException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 public class TarantoolRepositoryApplicationTest {
@@ -74,7 +73,9 @@ public class TarantoolRepositoryApplicationTest {
         final String SPACE_NAME = "tester2";
         TarantoolSpaceMetaOps spaceMetaOps = new TarantoolClientSpaceMetaOps(tarantoolClient);
 
-        spaceMetaOps.createSpace(SPACE_NAME, 1100, true);
+        SpaceResult createResult = spaceMetaOps.createSpace(SPACE_NAME, 1100, true);
+        SpaceResult createResult2 = spaceMetaOps.createSpace(SPACE_NAME, 1100, false);
+        Assertions.assertEquals(SpaceResult.EXISTING, createResult2);
 
         LinkedHashMap<String, FieldType> format = new LinkedHashMap<>();
         format.put("id", FieldType.UNSIGNED);
@@ -83,14 +84,14 @@ public class TarantoolRepositoryApplicationTest {
 
         spaceMetaOps.formatSpace(SPACE_NAME, format);
 
-        Map<Object, FieldType> primaryParts = new LinkedHashMap<>();
+        LinkedHashMap<Object, FieldType> primaryParts = new LinkedHashMap<>();
         primaryParts.put(1, FieldType.UNSIGNED);
         Object primaryIdxResult = spaceMetaOps.createPrimaryIndex(SPACE_NAME, primaryParts, IndexType.HASH);
 
-        Map<Object, FieldType> secondaryParts = new LinkedHashMap<>();
+        LinkedHashMap<Object, FieldType> secondaryParts = new LinkedHashMap<>();
         secondaryParts.put("band_name", FieldType.STRING);
         secondaryParts.put("year", FieldType.UNSIGNED);
-        Object secondaryIdxResult = spaceMetaOps.createSecondaryIndex(SPACE_NAME, "band_name_n_year", secondaryParts, IndexType.TREE,false);
+        Object secondaryIdxResult = spaceMetaOps.createSecondaryIndex(SPACE_NAME, "band_name_n_year", secondaryParts, IndexType.TREE, false);
 
         tarantoolClient.syncOps().ping();
         Map<String, TarantoolIndexMeta> indexesMeta = tarantoolClient.getSchemaMeta().getSpace(SPACE_NAME).getIndexes();
@@ -107,11 +108,61 @@ public class TarantoolRepositoryApplicationTest {
         tarantoolClient.syncOps().insert(SPACE_NAME, Arrays.asList(5, "ABBA", 1980));
         tarantoolClient.syncOps().insert(SPACE_NAME, Arrays.asList(6, "Metallica", 1990));
 
-        List<List<Object>> resultByBandNameAndYear = (List<List<Object>>)tarantoolClient.syncOps().select(
+        List<List<Object>> resultByBandNameAndYear = (List<List<Object>>) tarantoolClient.syncOps().select(
                 SPACE_NAME, "band_name_n_year", Arrays.asList("Metallica", 1990), 0, 100, Iterator.EQ);
 
         Assertions.assertNotNull(resultByBandNameAndYear);
         Assertions.assertEquals(2, resultByBandNameAndYear.size());
+
+        spaceMetaOps.dropSpace(SPACE_NAME);
+    }
+
+    @Test
+    public void tarantoolClientBankAccountInfoRepositoryTest() {
+        final String SPACE_NAME = "bank_account_info_test";
+        final String LAST_NAME_N_CITY_IDX = "last_name_n_city";
+        TarantoolSpaceMetaOps spaceMetaOps = new TarantoolClientSpaceMetaOps(tarantoolClient);
+
+        SpaceResult createResult = spaceMetaOps.createSpace(SPACE_NAME, 1100, true);
+        SpaceResult createResult2 = spaceMetaOps.createSpace(SPACE_NAME, 1100, false);
+        Assertions.assertEquals(SpaceResult.EXISTING, createResult2);
+
+        LinkedHashMap<String, FieldType> format = BankAccountInfoTuple.tupleFormat();
+
+        spaceMetaOps.formatSpace(SPACE_NAME, format);
+
+        LinkedHashMap<Object, FieldType> primaryParts = new LinkedHashMap<>();
+        primaryParts.put(1, FieldType.STRING);
+        Object primaryIdxResult = spaceMetaOps.createPrimaryIndex(SPACE_NAME, primaryParts, IndexType.HASH);
+
+        LinkedHashMap<Object, FieldType> secondaryParts = new LinkedHashMap<>();
+        secondaryParts.put("last_name", FieldType.STRING);
+        secondaryParts.put("city", FieldType.STRING);
+        Object secondaryIdxResult = spaceMetaOps.createSecondaryIndex(SPACE_NAME, LAST_NAME_N_CITY_IDX, secondaryParts, IndexType.TREE, false);
+
+        tarantoolClient.syncOps().ping();
+        Map<String, TarantoolIndexMeta> indexesMeta = tarantoolClient.getSchemaMeta().getSpace(SPACE_NAME).getIndexes();
+        Assertions.assertEquals(2, indexesMeta.size());
+        Assertions.assertNotNull(indexesMeta.get("primary"));
+        Assertions.assertNotNull(indexesMeta.get(LAST_NAME_N_CITY_IDX));
+
+        BankAccountInfoTuple bankAccInfo1 = new BankAccountInfoTuple(UUID.randomUUID(), "LastName", "FirstName", "Patronymic", "City", true);
+        BankAccountInfoTuple bankAccInfo2 = new BankAccountInfoTuple(UUID.randomUUID(), "LastName", "FirstName", "Patronymic", "City", false);
+
+        tarantoolClient.syncOps().insert(SPACE_NAME, bankAccInfo1.asList());
+        tarantoolClient.syncOps().insert(SPACE_NAME, bankAccInfo2.asList());
+
+        List<List<Object>> resultBySecondaryIdx = (List<List<Object>>) tarantoolClient.syncOps()
+                .select(
+                        SPACE_NAME, LAST_NAME_N_CITY_IDX, Arrays.asList("LastName", "City"),
+                        0, 100, Iterator.EQ);
+
+        Assertions.assertNotNull(resultBySecondaryIdx);
+        Assertions.assertEquals(2, resultBySecondaryIdx.size());
+
+        List<BankAccountInfoTuple> bankAccountInfoTuples = resultBySecondaryIdx.stream()
+                .map(list -> BankAccountInfoTuple.from(list))
+                .collect(Collectors.toList());
 
         spaceMetaOps.dropSpace(SPACE_NAME);
     }

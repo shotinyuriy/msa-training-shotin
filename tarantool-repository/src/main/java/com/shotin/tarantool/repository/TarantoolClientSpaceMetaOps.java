@@ -16,18 +16,25 @@ public class TarantoolClientSpaceMetaOps implements TarantoolSpaceMetaOps {
     private final TarantoolClient tarantoolClient;
 
     @Override
-    public Object createSpace(String spaceName, int id, boolean replaceIfExists) {
+    public SpaceResult createSpace(String spaceName, int id, boolean replaceIfExists) {
+        SpaceResult spaceResult;
         try {
+            tarantoolClient.syncOps().ping();
             TarantoolSpaceMeta spaceMeta = tarantoolClient.getSchemaMeta().getSpace(spaceName);
 
             if (replaceIfExists && spaceMeta != null && spaceMeta.getName() != null) {
                 List<TarantoolSpaceMeta.SpaceField> fields = spaceMeta.getFormat();
-                tarantoolClient.syncOps().eval("box.space." + spaceName + ":drop()");
+                Object deleteResult = tarantoolClient.syncOps().eval("box.space." + spaceName + ":drop()");
+                spaceResult = SpaceResult.REPLACED;
+            } else {
+                spaceResult = SpaceResult.EXISTING;
+                return spaceResult;
             }
         } catch (TarantoolSpaceNotFoundException e) {
-
+            spaceResult = SpaceResult.NEW;
         }
-        return tarantoolClient.syncOps().eval("box.schema.space.create('"+spaceName+"',{id="+id+"})");
+        tarantoolClient.syncOps().eval("box.schema.space.create('"+spaceName+"',{id="+id+"})");
+        return spaceResult;
     }
 
     @Override
@@ -51,7 +58,7 @@ public class TarantoolClientSpaceMetaOps implements TarantoolSpaceMetaOps {
     }
 
     @Override
-    public Object createPrimaryIndex(String spaceName, Map<Object, FieldType> parts, IndexType indexType) {
+    public Object createPrimaryIndex(String spaceName, LinkedHashMap<Object, FieldType> parts, IndexType indexType) {
         StringBuilder sb = new StringBuilder();
         sb.append("box.space.").append(spaceName)
                 .append(":create_index('primary',")
@@ -62,7 +69,7 @@ public class TarantoolClientSpaceMetaOps implements TarantoolSpaceMetaOps {
     }
 
     @Override
-    public Object createSecondaryIndex(String spaceName, String indexName, Map<Object, FieldType> parts, IndexType indexType, boolean unique) {
+    public Object createSecondaryIndex(String spaceName, String indexName, LinkedHashMap<Object, FieldType> parts, IndexType indexType, boolean unique) {
         StringBuilder sb = new StringBuilder();
         sb.append("box.space.").append(spaceName)
                 .append(":create_index('").append(indexName).append("',")

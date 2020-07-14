@@ -9,3 +9,13 @@ For an example of how to use this Docker setup, refer to the [Confluent Platform
 # Additional Examples
 
 For additional examples that showcase streaming applications within an event streaming platform, see [these demos](https://github.com/confluentinc/examples).
+
+# Tarantool Connect
+```bash
+docker exec -i -t accounts-tarantool console
+```
+
+# Tarantool Connect on Windows
+```bash
+winpty docker exec -i -t accounts-tarantool console
+```
