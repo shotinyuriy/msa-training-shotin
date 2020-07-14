@@ -1,7 +1,7 @@
 plugins {
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
-    id 'maven'
+    id 'java-library'
     id 'maven-publish'
 }
 
@@ -31,9 +31,16 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    testImplementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.1'
     testImplementation('org.springframework.boot:spring-boot-starter-data-redis:2.2.8.RELEASE')
     testImplementation('org.springframework.boot:spring-boot-starter-test:2.2.8.RELEASE') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+publishing {
+    publications {
+
     }
 }
 
