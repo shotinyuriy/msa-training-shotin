@@ -72,34 +72,4 @@ public class CassandraConfigWithAbstract extends AbstractCassandraConfiguration 
         ckss.ifNotExists(true).withNetworkReplication(dcr);
         return ckss;
     }
-
-
-
-
-
-    /**
-     * CURRENTLY THIS IS NOT USED
-     * @param resourceName
-     * @return
-     */
-    public static List<String> loadStartUpScriptsFromResource(String resourceName) {
-        List<String> scripts = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        try (InputStream inputStream = CassandraConfigWithAbstract.class.getClassLoader().getResourceAsStream(resourceName);
-             InputStreamReader reader = new InputStreamReader(inputStream);
-             BufferedReader bufferedReader = new BufferedReader(reader)) {
-
-            bufferedReader.lines()
-                    .forEach(line -> sb.append(line).append("\n"));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load cassandra startup script", e);
-        }
-        if (sb.length() > 0) {
-            String[] lines = sb.toString().split("\\|");
-            for (String line : lines) {
-                scripts.add(line);
-            }
-        }
-        return scripts;
-    }
 }

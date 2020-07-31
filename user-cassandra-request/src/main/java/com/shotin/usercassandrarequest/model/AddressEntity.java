@@ -1,6 +1,5 @@
 package com.shotin.usercassandrarequest.model;
 
-//import com.datastax.driver.core.DataType;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
