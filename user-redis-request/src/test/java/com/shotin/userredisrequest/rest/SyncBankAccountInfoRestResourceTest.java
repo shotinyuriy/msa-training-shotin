@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Flux;
 
+import java.util.concurrent.ExecutionException;
+
 @ExtendWith(MockitoExtension.class)
 public class SyncBankAccountInfoRestResourceTest {
 
@@ -23,7 +25,7 @@ public class SyncBankAccountInfoRestResourceTest {
     private BankAccountInfoService bankAccountInfoService;
 
     @Test
-    public void testBankAccountInfoKeys_ServiceException() {
+    public void testBankAccountInfoKeys_ServiceException() throws ExecutionException, InterruptedException {
         Mockito.when(bankAccountInfoService.findAllKeys())
                 .thenReturn(Flux.error(new RuntimeException("Redis Connection Failure")));
 
@@ -34,7 +36,7 @@ public class SyncBankAccountInfoRestResourceTest {
     }
 
     @Test
-    public void testBankAccountInfoKeys_Success() {
+    public void testBankAccountInfoKeys_Success() throws ExecutionException, InterruptedException {
         Mockito.when(bankAccountInfoService.findAllKeys())
                 .thenReturn(Flux.just("uuid1", "uuid2", "uuid"));
 
