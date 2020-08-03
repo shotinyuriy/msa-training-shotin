@@ -1,4 +1,3 @@
----
 version: '2'
 services:
   zookeeper:
@@ -60,7 +59,7 @@ services:
 #      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
 #      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 #      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-
+#
 #  broker-three:
 #    labels:
 #      - "msa-training"
@@ -84,22 +83,22 @@ services:
 #      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 #      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
 
-#  accounts-cassandra:
-#    labels:
-#      - "msa-training"
-#    image: 'cassandra:3.11'
-#    hostname: accounts-cassandra
-#    container_name: accounts-cassandra
-#    ports:
-#      - '7000:7000'
-#      - '9042:9042'
-#    volumes:
-#      - 'cassandra_data:/bitnami'
-#   -- optional
-#    environment:
-#      - CASSANDRA_SEEDS=cassandra
-#      - CASSANDRA_PASSWORD_SEEDER=yes
-#      - CASSANDRA_PASSWORD=cassandra
+  accounts-cassandra:
+    labels:
+      - "msa-training"
+    image: 'cassandra:3.11'
+    hostname: accounts-cassandra
+    container_name: accounts-cassandra
+    ports:
+      - '7000:7000'
+      - '9042:9042'
+    volumes:
+      - 'cassandra_data:/var/lib/cassandra'
+    environment:
+      - CASSANDRA_BROADCAST_ADDRESS=accounts-cassandra
+      - CASSANDRA_SEEDS=accounts-cassandra
+      - CASSANDRA_PASSWORD_SEEDER=yes
+      - CASSANDRA_PASSWORD=cassandra
 
 #  accounts-redis:
 #    labels:
@@ -123,40 +122,76 @@ services:
 #      - "8081:8081"
 #    volumes:
 #      - 'redis_data:/redis'
-  oracle:
-    container_name: bank-oracle
-    hostname: bank-oracle
-    image: wnameless/oracle-xe-11g
-    volumes:
-      - 'oracle_data:/oracle'
-    ports:
-      - "1521:1521"
+#  oracle:
+#    container_name: bank-oracle
+#    hostname: bank-oracle
+#    image: wnameless/oracle-xe-11g
+#    volumes:
+#      - 'oracle_data:/oracle'
+#    ports:
+#      - "1521:1521"
 
-  tarantool:
-    container_name: accounts-tarantool
-    hostname: accounts-tarantool
-    image: tarantool/tarantool
-    volumes:
-      - 'tarantool_data:/tarantool'
-    ports:
-      - "3301:3301"
-    environment:
-      TARANTOOL_USER_NAME: iurii
-      TARANTOOL_USER_PASSWORD: Passw0rd
+#  tarantool:
+#    container_name: accounts-tarantool
+#    hostname: accounts-tarantool
+#    image: tarantool/tarantool
+#    volumes:
+#      - 'tarantool_data:/tarantool'
+#    ports:
+#      - "3301:3301"
+#    environment:
+#      TARANTOOL_USER_NAME: iurii
+#      TARANTOOL_USER_PASSWORD: Passw0rd
+#
+#  tarantool1:
+#    container_name: tarantool1
+#    hostname: tarantool1
+##    image: tarantool/tarantool:2.x-centos7
+#    image: tarantool/vshard:0.1.14
+##    volumes:
+##      - './tarantool-vshard:/opt/tarantool'
+##    entrypoint: /opt/tarantool/start-tarantool.sh
+#    entrypoint: tarantool "/usr/local/bin/tarantool-entrypoint.lua"
+#    ports:
+#      - "3301:3301"
+#    networks:
+#      - msanet
+#    environment:
+#      TARANTOOL_USER_NAME: iurii
+#      TARANTOOL_USER_PASSWORD: Passw0rd
+#      TARANTOOL_REPLICATION: "tarantool1,tarantool2"
+#
+#  tarantool2:
+#    container_name: tarantool2
+#    hostname: tarantool2
+##    image: tarantool/tarantool:2.x-centos7
+#    image: tarantool/vshard:0.1.14
+##    volumes:
+##      - './tarantool-vshard:/opt/tarantool'
+##    entrypoint: /opt/tarantool/start-tarantool.sh
+#    entrypoint: tarantool "/usr/local/bin/tarantool-entrypoint.lua"
+#    ports:
+#      - "3302:3301"
+#    networks:
+#      - msanet
+#    environment:
+#      TARANTOOL_USER_NAME: iurii
+#      TARANTOOL_USER_PASSWORD: Passw0rd
+#      TARANTOOL_REPLICATION: "tarantool1,tarantool2"
 
 volumes:
-#  cassandra_data:
-#    driver: local
+  cassandra_data:
+    driver: local
   kafka_data:
     driver: local
 #  redis_data:
 #    driver: local
   zookeeper_data:
     driver: local
-  tarantool_data:
-    driver: local
-  oracle_data:
-    driver: local
+#  tarantool_data:
+#    driver: local
+#  oracle_data:
+#    driver: local
 
 networks:
   msanet:
