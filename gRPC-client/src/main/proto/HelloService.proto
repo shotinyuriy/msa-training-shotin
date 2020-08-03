@@ -34,6 +34,10 @@ message BankAccountInfo {
     Address address = 3;
 }
 
+message UuidRequest {
+    string uuid = 1;
+}
+
 message BankAccountRequest {
     string accountType = 1;
 }
@@ -47,5 +51,6 @@ service HelloService {
 }
 
 service BankAccountInfoService {
+  rpc findByUuid(UuidRequest) returns (BankAccountInfo);
   rpc findByAccountType(BankAccountRequest) returns (BankAccountResponse);
 }

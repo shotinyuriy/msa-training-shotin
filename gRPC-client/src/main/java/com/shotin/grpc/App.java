@@ -17,6 +17,10 @@ public class App {
         System.out.println(new App().getStarted());
 
         HelloClient helloClient = new HelloClient("localhost", 9009);
+
+        BankAccountInfo bankAccountInfo1 = helloClient.findByUuid("db46e417-9d7c-4397-836e-e1c3aef2e417");
+        System.out.println("bankAccountInfo1 = "+bankAccountInfo1);
+
         String greeting = helloClient.hello("Iurii", "Shotin");
 
         System.out.println("GREETING: " + greeting);

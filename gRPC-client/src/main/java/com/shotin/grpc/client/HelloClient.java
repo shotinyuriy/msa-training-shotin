@@ -1,8 +1,6 @@
 package com.shotin.grpc.client;
 
-import com.shotin.grpc.HelloRequest;
-import com.shotin.grpc.HelloResponse;
-import com.shotin.grpc.HelloServiceGrpc;
+import com.shotin.grpc.*;
 import io.grpc.Channel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -16,6 +14,7 @@ public class HelloClient {
 
     private final HelloServiceGrpc.HelloServiceBlockingStub blockingStub;
     private final HelloServiceGrpc.HelloServiceStub asyncStub;
+    private final BankAccountInfoServiceGrpc.BankAccountInfoServiceBlockingStub bankAccountInfoBlockingStub;
 
     public HelloClient(String host, int port) {
         this(ManagedChannelBuilder
@@ -27,6 +26,7 @@ public class HelloClient {
         Channel channel = channelBuilder.build();
         blockingStub = HelloServiceGrpc.newBlockingStub(channel);
         asyncStub = HelloServiceGrpc.newStub(channel);
+        bankAccountInfoBlockingStub = BankAccountInfoServiceGrpc.newBlockingStub(channel);
     }
 
     public String hello(String firstName, String lastName) {
@@ -44,5 +44,10 @@ public class HelloClient {
                 .setLastName(lastName)
                 .build();
         asyncStub.hello(helloRequest, responseObserver);
+    }
+
+    public BankAccountInfo findByUuid(String uuid) {
+        UuidRequest uuidRequest = UuidRequest.newBuilder().setUuid(uuid).build();
+        return bankAccountInfoBlockingStub.findByUuid(uuidRequest);
     }
 }
