@@ -1,5 +1,6 @@
 package com.shotin.kafkaconsumer.scheduler;
 
+import com.shotin.kafkaconsumer.converter.BankAccountInfoConverter;
 import com.shotin.kafkaconsumer.model.AddressEntity;
 import com.shotin.kafkaconsumer.model.BankAccountEntity;
 import com.shotin.kafkaconsumer.model.BankAccountInfo;
@@ -9,8 +10,6 @@ import com.shotin.bankaccount.model.kafka.BankAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 //@Component
 public class KafkaBankAccountScheduler {
@@ -35,7 +34,7 @@ public class KafkaBankAccountScheduler {
             if(bankAccount == null) {
                 break;
             }
-            BankAccountEntity bankAccountEntity = new BankAccountEntity(bankAccount);
+            BankAccountEntity bankAccountEntity = BankAccountInfoConverter.convertToBankAccountEntity(bankAccount);
             BankAccountInfo bankAccountInfo = new BankAccountInfo(bankAccountEntity.getUuid(), bankAccountEntity, new AddressEntity());
             bankAccountRepository.save(bankAccountInfo);
         }

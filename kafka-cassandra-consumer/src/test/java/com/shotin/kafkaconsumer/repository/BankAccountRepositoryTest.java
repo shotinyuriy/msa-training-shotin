@@ -2,9 +2,6 @@ package com.shotin.kafkaconsumer.repository;
 
 import com.datastax.driver.core.Cluster;
 import com.shotin.kafkaconsumer.config.TestCassandraConfig;
-import com.shotin.kafkaconsumer.model.AccountType;
-import com.shotin.kafkaconsumer.model.AddressEntity;
-import com.shotin.kafkaconsumer.model.BankAccountEntity;
 import com.shotin.kafkaconsumer.model.BankAccountInfo;
 import org.apache.thrift.transport.TTransportException;
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper;

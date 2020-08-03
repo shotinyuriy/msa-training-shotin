@@ -1,9 +1,6 @@
 package com.shotin.kafkaconsumer.model;
 
-import com.datastax.driver.core.DataType;
-import org.springframework.data.cassandra.core.mapping.CassandraType;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.cassandra.core.mapping.*;
 
 import java.util.UUID;
 
@@ -17,10 +14,12 @@ public class BankAccountInfo {
     @PrimaryKey
     private UUID uuid;
 
-    @CassandraType(type= DataType.Name.UDT, userTypeName = BankAccountEntity.BANK_ACCOUNT_TYPE)
+    @Frozen
+    @Column("bank_account")
     private BankAccountEntity bank_account;
 
-    @CassandraType(type= DataType.Name.UDT, userTypeName = AddressEntity.ADDRESS_TYPE)
+    @Frozen
+    @Column("address")
     private AddressEntity address;
 
     public BankAccountInfo(UUID uuid, BankAccountEntity bank_account, AddressEntity address) {

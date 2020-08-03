@@ -1,17 +1,26 @@
 package com.shotin.kafkaconsumer.config;
 
-import com.shotin.kafkaconsumer.model.BankAccountEntity;
+import com.datastax.oss.driver.api.core.CqlIdentifier;
+import com.datastax.oss.driver.api.core.CqlSession;
 import com.shotin.kafkaconsumer.repository.BankAccountRepository;
+import org.apache.catalina.Cluster;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
+import org.springframework.boot.autoconfigure.cassandra.CqlSessionBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.AbstractCassandraConfiguration;
-import org.springframework.data.cassandra.config.CassandraClusterFactoryBean;
+import org.springframework.data.cassandra.config.CassandraSessionFactoryBean;
 import org.springframework.data.cassandra.config.SchemaAction;
+import org.springframework.data.cassandra.core.CassandraOperations;
+import org.springframework.data.cassandra.core.CassandraTemplate;
+import org.springframework.data.cassandra.core.convert.CassandraConverter;
+import org.springframework.data.cassandra.core.convert.MappingCassandraConverter;
 import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecification;
 import org.springframework.data.cassandra.core.cql.keyspace.DataCenterReplication;
+import org.springframework.data.cassandra.core.mapping.BasicCassandraMappingContext;
+import org.springframework.data.cassandra.core.mapping.CassandraMappingContext;
+import org.springframework.data.cassandra.core.mapping.SimpleUserTypeResolver;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 
 import java.io.BufferedReader;
@@ -33,17 +42,7 @@ import java.util.List;
 public class CassandraConfig extends AbstractCassandraConfiguration {
 
     @Autowired
-    protected CassandraProperties cassandraProperties;
-
-    @Override
-    protected String getContactPoints() {
-        return cassandraProperties.getContactPoints().get(0);
-    }
-
-    @Override
-    protected int getPort() {
-        return cassandraProperties.getPort();
-    }
+    private CassandraProperties cassandraProperties;
 
     @Override
     protected String getKeyspaceName() {
@@ -51,21 +50,38 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
     }
 
     @Override
-    public String[] getEntityBasePackages() {
-        return new String[]{BankAccountEntity.class.getPackage().getName()};
-    }
-
-    @Override
     public SchemaAction getSchemaAction() {
-        return SchemaAction.valueOf(cassandraProperties.getSchemaAction().toUpperCase());
+        return SchemaAction.CREATE_IF_NOT_EXISTS;
     }
 
     @Override
-    public List<CreateKeyspaceSpecification> getKeyspaceCreations() {
+    protected String getLocalDataCenter() {
+        return cassandraProperties.getLocalDatacenter();
+    }
+
+    /**
+     * Use this for custom username and password to connect to Cassandra
+     * @param properties
+     * @return
+     */
+    @Bean
+    public CqlSessionBuilderCustomizer authCustomizer(final CassandraProperties properties) {
+        return (builder) -> builder
+                .withKeyspace(properties.getKeyspaceName())
+                .withLocalDatacenter(properties.getLocalDatacenter())
+                .withAuthCredentials(properties.getUsername(), properties.getPassword());
+    }
+
+    @Override
+    protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
+        return Collections.singletonList(createKeyspaceSpecification());
+    }
+
+    protected CreateKeyspaceSpecification createKeyspaceSpecification() {
         CreateKeyspaceSpecification ckss = CreateKeyspaceSpecification.createKeyspace(getKeyspaceName());
-//        DataCenterReplication dcr = DataCenterReplication.of("dc1", 1L);
-        ckss = ckss.ifNotExists(true);//.withNetworkReplication(dcr);
-        return Collections.singletonList(ckss);
+        DataCenterReplication dcr = DataCenterReplication.of(cassandraProperties.getLocalDatacenter(), 3L);
+        ckss.ifNotExists(true).withNetworkReplication(dcr);
+        return ckss;
     }
 
     public static List<String> loadStartUpScriptsFromResource(String resourceName) {
@@ -88,4 +104,5 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
         }
         return scripts;
     }
+
 }

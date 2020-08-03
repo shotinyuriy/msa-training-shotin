@@ -1,39 +1,37 @@
 package com.shotin.kafkaconsumer.model;
 
-import com.shotin.bankaccount.model.kafka.BankAccount;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.NoArgsConstructor;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 import java.util.UUID;
 
-import static com.shotin.kafkaconsumer.model.BankAccountEntity.BANK_ACCOUNT_TYPE;
-
-@UserDefinedType(BANK_ACCOUNT_TYPE)
+@JsonPropertyOrder({
+        "uuid", "lastName", "firstName", "patronymic", "accountNumber", "accountType"
+})
+@UserDefinedType(BankAccountEntity.BANK_ACCOUNT_TYPE)
 public class BankAccountEntity {
     public static final String BANK_ACCOUNT_TYPE = "bank_account_type";
 
     private UUID uuid;
+
     @Column("first_name")
     private String firstName;
+
     @Column("last_name")
     private String lastName;
+
     @Column("patronymic")
     private String patronymic;
+
     @Column("account_number")
     private long accountNumber;
+
     @Column("account_type")
     private AccountType accountType;
 
     public BankAccountEntity() {
-    }
-
-    public BankAccountEntity(BankAccount bankAccount) {
-        this.uuid = bankAccount.getUuid();
-        this.accountNumber = bankAccount.getAccountNumber();
-        this.firstName = bankAccount.getFirstName();
-        this.lastName = bankAccount.getLastName();
-        this.patronymic = bankAccount.getPatronymic();
-        this.accountType = bankAccount.getAccountType();
     }
 
     public UUID getUuid() {

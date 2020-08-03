@@ -4,8 +4,6 @@ import com.shotin.bankaccount.model.kafka.Address;
 import com.shotin.bankaccount.model.kafka.BankAccount;
 import com.shotin.bankaccount.model.kafka.JoinedBankAccountInfo;
 import com.shotin.kafkaconsumer.converter.BankAccountInfoConverter;
-import com.shotin.kafkaconsumer.model.AddressEntity;
-import com.shotin.kafkaconsumer.model.BankAccountEntity;
 import com.shotin.kafkaconsumer.model.BankAccountInfo;
 import com.shotin.kafkaconsumer.repository.BankAccountRepository;
 import org.apache.kafka.streams.kstream.KStream;

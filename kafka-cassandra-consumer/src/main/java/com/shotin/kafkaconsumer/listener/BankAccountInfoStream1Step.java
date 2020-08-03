@@ -4,11 +4,8 @@ import com.shotin.bankaccount.model.kafka.Address;
 import com.shotin.bankaccount.model.kafka.BankAccount;
 import com.shotin.bankaccount.model.kafka.JoinedBankAccountInfo;
 import com.shotin.kafkaconsumer.converter.BankAccountInfoConverter;
-import com.shotin.kafkaconsumer.model.AddressEntity;
-import com.shotin.kafkaconsumer.model.BankAccountEntity;
 import com.shotin.kafkaconsumer.model.BankAccountInfo;
 import com.shotin.kafkaconsumer.repository.BankAccountRepository;
-import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +15,6 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.context.annotation.Profile;
-import org.springframework.messaging.handler.annotation.SendTo;
 
 import java.util.UUID;
 
