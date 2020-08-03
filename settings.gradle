@@ -8,3 +8,9 @@
  */
 
 rootProject.name = 'msa-training-shotin'
+
+include 'gRPC-service'
+include 'gRPC-client'
+include 'kafka-producer'
+include 'kafka-cassandra-consumer'
+include 'user-cassandra-request'

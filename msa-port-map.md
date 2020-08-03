@@ -9,3 +9,5 @@
 - hello-server: 9009
 - kafka-oracle-consumer: 9010
 - oracle-tarantool-loader: 9011
+- gRPC-service: 9012
+- gRPC-client: 9013
