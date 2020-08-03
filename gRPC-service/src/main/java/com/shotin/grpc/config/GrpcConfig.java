@@ -1,6 +1,9 @@
 package com.shotin.grpc.config;
 
-import com.shotin.grpc.server.HelloServer;
+import com.shotin.grpc.server.BankAccountInfoServer;
+import com.shotin.grpc.service.BankAccountInfoService;
+import com.shotin.grpc.service.HelloService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,9 +13,15 @@ import java.io.IOException;
 @Configuration
 public class GrpcConfig {
 
+    @Autowired
+    HelloService helloService;
+
+    @Autowired
+    BankAccountInfoService bankAccountInfoService;
+
     @PostConstruct
     public void startServer() {
-        HelloServer helloServer = helloServer();
+        BankAccountInfoServer helloServer = helloServer();
         try {
             helloServer.start();
             helloServer.blockUntilShutdown();
@@ -22,8 +31,8 @@ public class GrpcConfig {
     }
 
     @Bean
-    public HelloServer helloServer() {
-        HelloServer helloServer = new HelloServer(9009);
+    public BankAccountInfoServer helloServer() {
+        BankAccountInfoServer helloServer = new BankAccountInfoServer(9009, bankAccountInfoService, helloService);
         return helloServer;
     }
 }

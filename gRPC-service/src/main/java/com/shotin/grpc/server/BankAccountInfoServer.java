@@ -1,26 +1,43 @@
 package com.shotin.grpc.server;
 
+import com.shotin.grpc.service.BankAccountInfoService;
 import com.shotin.grpc.service.HelloService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-public class HelloServer {
+@Service
+@RequiredArgsConstructor
+public class BankAccountInfoServer {
 
-    private static final Logger logger = Logger.getLogger(HelloServer.class.getName());
+    private static final Logger logger = Logger.getLogger(BankAccountInfoServer.class.getName());
 
     private final int port;
-    private final Server server;
+    private final BankAccountInfoService bankAccountInfoService;
+    private final HelloService helloService;
+    private Server server;
 
-    public HelloServer(int port) {
-        this(ServerBuilder.forPort(port), port);
-    }
+//    public BankAccountInfoServer(int port) {
+//        this(ServerBuilder.forPort(port), port);
+//    }
 
-    public HelloServer(ServerBuilder<?> serverBuilder, int port) {
-        this.port = port;
-        this.server = serverBuilder.addService(new HelloService()).build();
+//    public BankAccountInfoServer(ServerBuilder<?> serverBuilder, int port) {
+//        this.port = port;
+//        this.server = serverBuilder.addService(new HelloService()).build();
+//    }
+
+    @PostConstruct
+    public void init() {
+        ServerBuilder serverBuilder = ServerBuilder.forPort(port);
+        this.server = serverBuilder
+                .addService(helloService)
+                .addService(bankAccountInfoService)
+                .build();
     }
 
     public void start() throws IOException {
@@ -32,7 +49,7 @@ public class HelloServer {
                 // Use stderr here since the logger may have been reset by its JVM shutdown hook.
                 System.err.println("*** shutting down gRPC server since JVM is shutting down");
                 try {
-                    HelloServer.this.stop();
+                    BankAccountInfoServer.this.stop();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

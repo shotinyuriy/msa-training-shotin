@@ -11,7 +11,41 @@ message HelloResponse {
   string greeting = 1;
 }
 
+
+
+
+message Address {
+    string street = 1;
+    string city = 2;
+    string state = 3;
+}
+
+message BankAccount {
+    string uuid = 1;
+    string lastName = 2;
+    string firstName = 3;
+    string patronymic = 4;
+    string accountType = 5;
+}
+
+message BankAccountInfo {
+    string uuid = 1;
+    BankAccount bankAccount = 2;
+    Address address = 3;
+}
+
+message BankAccountRequest {
+    string accountType = 1;
+}
+
+message BankAccountResponse {
+    repeated BankAccountInfo bankAccountInfos = 1;
+}
+
 service HelloService {
   rpc hello(HelloRequest) returns (HelloResponse);
 }
 
+service BankAccountInfoService {
+  rpc findByAccountType(BankAccountRequest) returns (BankAccountResponse);
+}
