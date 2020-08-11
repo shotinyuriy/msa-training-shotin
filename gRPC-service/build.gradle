@@ -21,6 +21,7 @@ plugins {
     id 'application'
     id "com.google.protobuf" version "0.8.12"
     id 'idea'
+    // Spring
     id 'org.springframework.boot' version '2.3.1.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 }
@@ -96,7 +97,7 @@ idea {
 
 application {
     // Define the main class for the application.
-    mainClassName = 'com.shotin.grpc.App'
+    mainClassName = 'com.shotin.grpc.GrpcServiceApplication'
 }
 
 test {

@@ -1,2 +1,8 @@
 server:
   port: 9012
+spring:
+  data:
+    cassandra:
+      keyspace-name: bankkeyspace
+      contact-points: localhost
+      local-datacenter: datacenter1

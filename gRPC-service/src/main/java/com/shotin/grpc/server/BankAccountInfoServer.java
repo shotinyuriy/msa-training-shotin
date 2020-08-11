@@ -18,9 +18,9 @@ public class BankAccountInfoServer {
     private static final Logger logger = Logger.getLogger(BankAccountInfoServer.class.getName());
 
     private final int port;
+    private Server server;
     private final BankAccountInfoService bankAccountInfoService;
     private final HelloService helloService;
-    private Server server;
 
 //    public BankAccountInfoServer(int port) {
 //        this(ServerBuilder.forPort(port), port);

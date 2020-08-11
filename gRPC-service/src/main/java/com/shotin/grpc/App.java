@@ -1,6 +1,6 @@
 package com.shotin.grpc;
 
-import com.shotin.grpc.repository.MockBankAccountInfoRepository;
+import mock.MockBankAccountInfoRepository;
 import com.shotin.grpc.server.BankAccountInfoServer;
 import com.shotin.grpc.service.BankAccountInfoService;
 import com.shotin.grpc.service.HelloService;
@@ -15,7 +15,6 @@ public class App {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         System.out.println(new App().getStarted());
-
 
         HelloService helloService = new HelloService();
 

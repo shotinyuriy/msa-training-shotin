@@ -45,7 +45,7 @@ class UserTarantoolRequestApplicationTests {
 				" {name = 'year', type = 'unsigned'}" +
 				" })");
 
-		tarantoolClient.syncOps().eval("box.space.tester:create_index('primary', {type = 'hash', parts = {1, 'unsigned'}})");
+		tarantoolClient.syncOps().eval("box.space.tester1:create_index('primary', {type = 'hash', parts = {1, 'unsigned'}})");
 
 		Object response = tarantoolClient
 				.syncOps()
@@ -53,7 +53,7 @@ class UserTarantoolRequestApplicationTests {
 
 		LOG.error("RESPONSE = "+response);
 
-		tarantoolClient.syncOps().eval("box.space.tester:drop()");
+		tarantoolClient.syncOps().eval("box.space.tester1:drop()");
 
 	}
 

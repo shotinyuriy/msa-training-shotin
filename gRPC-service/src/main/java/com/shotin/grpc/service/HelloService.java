@@ -4,7 +4,9 @@ import com.shotin.grpc.HelloRequest;
 import com.shotin.grpc.HelloResponse;
 import com.shotin.grpc.HelloServiceGrpc;
 import io.grpc.stub.StreamObserver;
+import org.springframework.stereotype.Service;
 
+@Service
 public class HelloService extends HelloServiceGrpc.HelloServiceImplBase {
 
     @Override

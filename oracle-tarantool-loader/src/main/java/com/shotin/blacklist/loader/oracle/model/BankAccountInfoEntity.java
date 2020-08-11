@@ -21,6 +21,9 @@ public class BankAccountInfoEntity {
     @Id
     private UUID uuid;
 
+    @Column(name="update_id")
+    private Long updateId;
+
     @Column(name="last_name")
     private String lastName;
 

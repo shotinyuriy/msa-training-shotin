@@ -3,6 +3,7 @@
  */
 package com.shotin.grpc;
 
+import com.shotin.grpc.client.BankAccountInfoClient;
 import com.shotin.grpc.client.HelloClient;
 import io.grpc.stub.StreamObserver;
 
@@ -16,51 +17,40 @@ public class App {
     public static void main(String[] args) {
         System.out.println(new App().getStarted());
 
-        HelloClient helloClient = new HelloClient("localhost", 9009);
+        // HelloClient helloClient = new HelloClient("localhost", 9009);
+        BankAccountInfoClient bankAccountInfoClient = new BankAccountInfoClient("localhost", 9009);
 
-        BankAccountInfo bankAccountInfo1 = helloClient.findByUuid("db46e417-9d7c-4397-836e-e1c3aef2e417");
+
+        BankAccountInfo bankAccountInfo1 = bankAccountInfoClient.findByUuid("db46e417-9d7c-4397-836e-e1c3aef2e417");
         System.out.println("bankAccountInfo1 = "+bankAccountInfo1);
 
-        String greeting = helloClient.hello("Iurii", "Shotin");
+        // String greeting = helloClient.hello("Iurii", "Shotin");
 
-        System.out.println("GREETING: " + greeting);
+        // System.out.println("GREETING: " + greeting);
 
-        final AtomicReference<String> greetingReference = new AtomicReference<>();
-        helloClient.helloAsync("John", "Johnson", new StreamObserver<HelloResponse>() {
-
-            @Override
-            public void onNext(HelloResponse value) {
-                greetingReference.set(value.getGreeting());
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                System.err.println("ERROR: "+t);
-            }
-
-            @Override
-            public void onCompleted() {
-                System.out.println("GREETING: " + greetingReference.get());
-            }
-        });
-
-        helloClient.helloAsync("John 2", "Johnson 2", new StreamObserver<HelloResponse>() {
-
-            @Override
-            public void onNext(HelloResponse value) {
-                greetingReference.set(value.getGreeting());
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                System.err.println("ERROR: "+t);
-            }
-
-            @Override
-            public void onCompleted() {
-                System.out.println("GREETING: " + greetingReference.get());
-            }
-        });
+//        final AtomicReference<String> greetingReference = new AtomicReference<>();
+//
+//        StreamObserver<HelloResponse> observer = new StreamObserver<HelloResponse>() {
+//
+//            @Override
+//            public void onNext(HelloResponse value) {
+//                greetingReference.set(value.getGreeting());
+//            }
+//
+//            @Override
+//            public void onError(Throwable t) {
+//                System.err.println("ERROR: "+t);
+//            }
+//
+//            @Override
+//            public void onCompleted() {
+//                System.out.println("GREETING: " + greetingReference.get());
+//            }
+//        };
+//
+//        helloClient.helloAsync("John", "Johnson", observer);
+//
+//        helloClient.helloAsync("John 2", "Johnson 2", observer);
 
         try {
             Thread.sleep(1000);

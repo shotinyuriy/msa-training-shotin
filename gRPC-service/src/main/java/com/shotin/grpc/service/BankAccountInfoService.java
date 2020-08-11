@@ -1,13 +1,19 @@
 package com.shotin.grpc.service;
 
 import com.shotin.grpc.*;
+import com.shotin.grpc.model.BankAccountInfoEntity;
 import com.shotin.grpc.repository.BankAccountInfoRepository;
+import groovy.util.logging.Slf4j;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BankAccountInfoService extends BankAccountInfoServiceGrpc.BankAccountInfoServiceImplBase {
@@ -16,8 +22,31 @@ public class BankAccountInfoService extends BankAccountInfoServiceGrpc.BankAccou
 
     @Override
     public void findByUuid(UuidRequest request, StreamObserver<BankAccountInfo> responseObserver) {
-        responseObserver.onNext(byUuid(request.getUuid()));
-        responseObserver.onCompleted();
+
+        byUuid(request.getUuid())
+                .subscribe(new Subscriber<BankAccountInfo>() {
+                    Subscription sub;
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        sub = s;
+                        s.request(1);
+                    }
+
+                    @Override
+                    public void onNext(BankAccountInfo bankAccountInfo) {
+                        responseObserver.onNext(bankAccountInfo);
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        responseObserver.onError(t);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        responseObserver.onCompleted();
+                    }
+                });
     }
 
     @Override
@@ -25,9 +54,11 @@ public class BankAccountInfoService extends BankAccountInfoServiceGrpc.BankAccou
         super.findByAccountType(request, responseObserver);
     }
 
-    private BankAccountInfo byUuid(String uuid) {
-        return bankAccountInfoRepository.findById(UUID.fromString(uuid))
-                .map(bae -> {
+    private Mono<BankAccountInfo> byUuid(String uuid) {
+        Mono<BankAccountInfoEntity> mono = bankAccountInfoRepository
+                .findById(UUID.fromString(uuid));
+
+        Mono<BankAccountInfo> mappedMono = mono.map(bae -> {
                     BankAccountInfo bankAccountInfo = BankAccountInfo.newBuilder()
                             .setBankAccount(BankAccount.newBuilder()
                                     .setLastName(bae.getBankAccount().getLastName()))
@@ -35,7 +66,7 @@ public class BankAccountInfoService extends BankAccountInfoServiceGrpc.BankAccou
                                     .setStreet(bae.getAddress().getStreet()))
                             .build();
                             return  bankAccountInfo;
-                }).block();
-
+                });
+        return mappedMono;
     }
 }
