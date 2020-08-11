@@ -28,12 +28,13 @@ public class BankAccountInfoScheduler {
         log.info("(1) START LOADING");
         long startTotal = System.currentTimeMillis();
         Long updateId = 1L;
-        final int pageSize = 50;
+        final int pageCount = Runtime.getRuntime().availableProcessors();
+
         log.info("(1) START COUNTING");
         long startCount = System.currentTimeMillis();
         int count = bankAccountInfoRepository.countByUpdateId(updateId);
 
-        int pageCount = count / pageSize + 1;
+        int pageSize = count / pageCount + 1;
         long finishCount = System.currentTimeMillis();
         log.info("(1) FINISH COUNTING PAGE COUNT = "+pageCount+" TIME = "+ (finishCount - startCount)+ " ms");
 
@@ -45,19 +46,20 @@ public class BankAccountInfoScheduler {
         log.info("(1) START READING AND WRITING");
         pageRequests
                 .parallelStream()
-                .flatMap(pageRequest -> bankAccountInfoRepository.findAllByUpdateId(updateId, pageRequest).stream())
-                .parallel()
-                .map(entity -> {
-                    BankAccountInfoTuple tuple = new BankAccountInfoTuple();
-                    tuple.setUuid(entity.getUuid());
-                    tuple.setLastName(entity.getLastName());
-                    tuple.setFirstName(entity.getFirstName());
-                    tuple.setPatronymic(entity.getPatronymic());
-                    tuple.setCity(entity.getCity());
-                    tuple.setBlackListed(Boolean.TRUE.equals(entity.getBlackListed()));
-                    return tuple;
-                })
-                .forEach(bankAccountInfoSpaceRepository::save);
+                .forEach(pageRequest -> bankAccountInfoRepository.findAllByUpdateId(updateId, pageRequest)
+                        .parallelStream()
+                        .map(entity -> {
+                            BankAccountInfoTuple tuple = new BankAccountInfoTuple();
+                            tuple.setUuid(entity.getUuid());
+                            tuple.setLastName(entity.getLastName());
+                            tuple.setFirstName(entity.getFirstName());
+                            tuple.setPatronymic(entity.getPatronymic());
+                            tuple.setCity(entity.getCity());
+                            tuple.setBlackListed(Boolean.TRUE.equals(entity.getBlackListed()));
+                            return tuple;
+                        })
+                        .forEach(bankAccountInfoSpaceRepository::save))
+                ;
         long finish = System.currentTimeMillis();
         log.info("(1) FINISH READING AND WRITING TIME = "+ (finish - start)+" ms \n TOTAL TIME = "+(finish - startTotal)+ "ms");
     }
